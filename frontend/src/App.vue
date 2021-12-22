@@ -41,7 +41,11 @@ export default {
 main{
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
+}
+
+header{
+  margin-bottom: 35px;
 }
 
 footer{
@@ -52,6 +56,6 @@ footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: auto;
+    margin-top: 35px;
 }
 </style>

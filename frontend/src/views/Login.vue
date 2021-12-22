@@ -84,8 +84,8 @@ export default {
 
 <style lang="scss" scoped>
 .signUpCard{
-    margin: 35px;
-    border-radius: 5px;
+    margin: auto;
+    border-radius: 10px;
     background-color: rgba($color: #808080, $alpha: 0.1);
     padding-bottom: 35px;
     padding-top: 35px;
@@ -124,6 +124,7 @@ h1{
     margin-bottom: 15px;
     color: #D12300;
 }
+
 button{
     width: 50%;
     height: 40px;
@@ -135,5 +136,26 @@ button{
     text-decoration: none;
     border: none;
 }
+
+@media only screen and (min-width: 750px) {
+.signUpCard{
+    width: 65%;
+}
+
+input{
+    width: 80%;
+}
+
+button{
+    width: 30%;
+}
+}
+
+@media only screen and (min-width: 1024px) {
+    .signUpCard{
+        width: 50%;
+    }
+}
+
 </style>
     
