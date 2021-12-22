@@ -1,0 +1,10 @@
+{
+    "development": {
+      "username": "root",
+      "password": "P7groupomaniaM-h",
+      "database": "groupomania",
+      "host": "localhost",
+      "dialect": "mysql"
+    }
+  }
+  
