@@ -6,7 +6,7 @@
         <p class="signUpCard__subtitle" v-if="mode == 'login'">Pas encore inscrit ? <span @click="switchToCreateAccount()">Créer un compte</span></p>
         <p class="signUpCard__subtitle" v-else>Déjà inscrit ? <span @click="switchToLogin()">Se connecter</span></p>
         <form method="post" @submit.prevent="CreateAccount" >
-            <input type="text" v-if="mode == 'createAccount'" v-model="lastName" placeholder="Nom">
+            <input type="text" v-if="mode == 'createAccount'" v-model="name" placeholder="Nom">
             <input type="text" v-if="mode == 'createAccount'" v-model="firstName" placeholder="Prénom">
             <input type="email" v-model="email" placeholder="Email">
             <input type="password" v-model="password" placeholder="Mot de passe">
@@ -25,7 +25,7 @@ export default {
     name: 'Login',
     data() {
         return {
-            lastName: "",
+            name: "",
             firstName: "",
             email: "",
             password: "",
@@ -38,7 +38,7 @@ export default {
         async buttonCreateAccount() {
             if (this.password === this.confirmPassword) {
                 const data = {
-                    lastName: this.lastName,
+                    name: this.name,
                     firstName: this.firstName,
                     email: this.email,
                     password: this.password,
@@ -84,6 +84,7 @@ export default {
 
 <style lang="scss" scoped>
 .signUpCard{
+    width: 80%;
     margin: auto;
     border-radius: 10px;
     background-color: rgba($color: #808080, $alpha: 0.1);
@@ -107,7 +108,7 @@ export default {
 }
 
 input{
-    width: 90%;
+    width: 80%;
     height: 40px;
     border-radius: 5px;
     border: none;
