@@ -4,7 +4,7 @@ const User = require('../models').User;
 const MaskData = require('maskdata');
 
 const EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!.@#$%^&*])(?=.{8,})/;
+const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[_!.@#$%^&*])(?=.{8,})/;
 
 const emailMask2Options = {
     maskWith: "*", 
@@ -26,7 +26,7 @@ exports.signup = (req, res, next) => {
     bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
-        const user = models.User.create({
+        const user = User.create({
             email: req.body.email,
             name: req.body.name,
             firstname: req.body.firstname,
@@ -34,19 +34,20 @@ exports.signup = (req, res, next) => {
             isAdmin: false,
         })
         .then((user) => {
+            
             res.status(201).json({
                 userId: user.id,
                 isAdmin: user.isAdmin,
             });
-    })
-    .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
-    .catch((error) => res.status(400).json({ error: 'error : Compte existe déja'  }));
+        })
+        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        .catch((error) => res.status(400).json({ error: 'error : Compte existe déja'  }));
     })
     .catch(error => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
-    User.findOne({ email: req.body.email })
+    User.findOne({where:{ email: req.body.email }})
         .then(user => {
             if (!user) {
                 return res.status(401).json({ error: 'Utilisateur non trouvé'});
@@ -57,9 +58,9 @@ exports.login = (req, res, next) => {
                         return res.status(401).json({ error: 'Mot de passe incorrect'});
                     }
                     res.status(200).json({
-                        userId: user._id,
+                        userId: user.id,
                         token: jwt.sign(
-                            { userId: user._id },
+                            { userId: user.id },
                             'RANDOM_TOKEN_SECRET',
                             { expiresIn: '24h' }
                         )

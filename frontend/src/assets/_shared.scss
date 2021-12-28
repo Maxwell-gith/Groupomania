@@ -1,0 +1,11 @@
+//Colors
+$primaryColor: #D12300;
+$secondaryColor: rgba($color: #808080, $alpha: 0.1);
+$tertiaryColor: #003049;
+
+// Shadows
+@mixin shadow {
+    box-shadow: 4px 4px 10px #BCC4C0;
+}
+
+// Animations

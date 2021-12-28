@@ -1,5 +1,6 @@
 <template>
-    <section class="signUpCard">
+<section class="sectionLogin">
+    <div class="signUpCard">
         <img  class="signUpCard__logo" src="../assets/logo-red.svg"/>
         <h1 v-if="mode == 'login'">Connexion</h1>
         <h1 v-else>Inscription</h1>
@@ -7,14 +8,15 @@
         <p class="signUpCard__subtitle" v-else>Déjà inscrit ? <span @click="switchToLogin()">Se connecter</span></p>
         <form method="post" @submit.prevent="CreateAccount" >
             <input type="text" v-if="mode == 'createAccount'" v-model="name" placeholder="Nom">
-            <input type="text" v-if="mode == 'createAccount'" v-model="firstName" placeholder="Prénom">
+            <input type="text" v-if="mode == 'createAccount'" v-model="firstname" placeholder="Prénom">
             <input type="email" v-model="email" placeholder="Email">
             <input type="password" v-model="password" placeholder="Mot de passe">
             <input type="password" v-if="mode == 'createAccount'" v-model="confirmPassword" placeholder="Confirmation Mot de passe">
             <button type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin">Se connecter</button>
             <button type="submit" v-else @click.prevent="buttonCreateAccount()">S'inscrire</button>
         </form>
-    </section>
+    </div>
+</section>
 </template>
 
 
@@ -26,7 +28,7 @@ export default {
     data() {
         return {
             name: "",
-            firstName: "",
+            firstname: "",
             email: "",
             password: "",
             confirmPassword: "",
@@ -39,7 +41,7 @@ export default {
             if (this.password === this.confirmPassword) {
                 const data = {
                     name: this.name,
-                    firstName: this.firstName,
+                    firstname: this.firstname,
                     email: this.email,
                     password: this.password,
                 }
@@ -47,7 +49,7 @@ export default {
                     .post("http://localhost:3000/api/auth/signup", data)
                     .then((res) => {
                         console.log(res);
-                        this.$router.push("/login");
+                        this.switchToLogin();
                     })
                     .catch((error) => {
                         console.log(error);
@@ -83,11 +85,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/assets/_shared.scss";
+
+.sectionLogin{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
 .signUpCard{
     width: 80%;
-    margin: auto;
     border-radius: 10px;
-    background-color: rgba($color: #808080, $alpha: 0.1);
+    background-color: $secondaryColor;
     padding-bottom: 35px;
     padding-top: 35px;
     &__logo{
@@ -101,7 +111,7 @@ export default {
         color: #808080;
         margin-bottom: 15px;
         span{
-            color: #D12300;
+            color: $primaryColor;
             cursor: pointer;
         }
     }
@@ -114,26 +124,23 @@ input{
     border: none;
     padding: 5px;
     margin-bottom: 25px;
-    box-shadow: 4px 4px 10px #BCC4C0;
+    @include shadow;
 }
 
-input:invalid{
-    border-color: red;
-}
 
 h1{
     margin-bottom: 15px;
-    color: #D12300;
+    color: $primaryColor;
 }
 
 button{
     width: 50%;
     height: 40px;
     padding: 5px;
-    background-color: #003049;
+    background-color: $tertiaryColor;
     border-radius: 10px;
     color: white;
-    box-shadow: 4px 4px 10px #BCC4C0;
+    @include shadow;
     text-decoration: none;
     border: none;
 }
@@ -154,7 +161,7 @@ button{
 
 @media only screen and (min-width: 1024px) {
     .signUpCard{
-        width: 50%;
+        width: 40%;
     }
 }
 

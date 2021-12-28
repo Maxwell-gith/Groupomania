@@ -29,7 +29,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
 }
 
 *{
@@ -42,10 +41,7 @@ main{
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-header{
-  margin-bottom: 35px;
+  background-color: #F7F7FF;
 }
 
 footer{
@@ -56,6 +52,5 @@ footer{
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 35px;
 }
 </style>

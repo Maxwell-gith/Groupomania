@@ -3,7 +3,7 @@ const app = express();
 const path = require ("path");
 
 const userRoutes = require("./routes/user.routes");
-const profileRoutes = require("./routes/user.routes");
+const profileRoutes = require("./routes/profile.routes");
 
 
 app.use((req, res, next) => {
@@ -24,6 +24,6 @@ app.use((req, res, next) => {
   app.use("/images", express.static(path.join(__dirname, "images")));
 
   app.use("/api/auth", userRoutes);
-  app.use("auth/api/auth", profileRoutes);
+  app.use("/api/auth", profileRoutes);
 
   module.exports = app;

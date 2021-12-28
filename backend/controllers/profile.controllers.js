@@ -2,19 +2,19 @@ const models = require("../models/");
 const jwt = require("jsonwebtoken");
 
 exports.getOneProfile = (req, res, next) => {
-  models.User.findOne({
-    attributes: ["id", "email", "name", "firstname"],
-    where: { id: req.params.id },
-  })
+  models.User.findOne({ 
+    where: { id: req.params.id }, 
+    attributes: ["id", "email", "name", "firstname"],})
     .then((user) => {
       res.status(200).json(user);
+      console.log(user);
     })
     .catch((error) => {
       res.status(404).json({
         error: error,
         message: "Utilisateur non trouvé !",
-      });
-    });
+      })
+    })
 };
 
 exports.modifyProfile = (req, res, next) => {
@@ -38,11 +38,11 @@ exports.modifyProfile = (req, res, next) => {
           name: req.body.name,
           firstname: req.body.firstname,
         })
-        .then(() => res.status(200).json({ message: "Profile modifié !" }))
+        .then(() => res.status(200).json({ message: "Profil modifié !" }))
         .catch((error) =>
           res
             .status(400)
-            .json({ error: "Impossible de mettre à jour votre profile !" })
+            .json({ error: "Impossible de mettre à jour votre profil !" })
         );
     }
   });
