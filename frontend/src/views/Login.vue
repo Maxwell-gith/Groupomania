@@ -12,7 +12,7 @@
             <input type="email" v-model="email" placeholder="Email">
             <input type="password" v-model="password" placeholder="Mot de passe">
             <input type="password" v-if="mode == 'createAccount'" v-model="confirmPassword" placeholder="Confirmation Mot de passe">
-            <button type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin">Se connecter</button>
+            <button type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin()">Se connecter</button>
             <button type="submit" v-else @click.prevent="buttonCreateAccount()">S'inscrire</button>
         </form>
     </div>
