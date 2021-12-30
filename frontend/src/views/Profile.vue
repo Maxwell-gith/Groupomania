@@ -3,11 +3,16 @@
         <div class="sectionProfile__card">
             <h1 class="sectionProfile__card__title">Mon profil</h1>
             <ul class="sectionProfile__card__content">
-                <li class="sectionProfile__card__content__data">Nom :{{ dataUser.name }}</li> 
-                <li class="sectionProfile__card__content__data">Prénom :{{ dataUser.firstname }}</li> 
-                <li class="sectionProfile__card__content__data">Email :{{ dataUser.email }}</li> 
+                <input type="text" v-if="mode == 'update'" v-model="name" placeholder="Nom"> 
+                <li class="sectionProfile__card__content__data" v-else>Nom :{{ dataUser.name }}</li>
+                <input type="text" v-if="mode == 'update'" v-model="firstname" placeholder="Prénom">
+                <li class="sectionProfile__card__content__data" v-else>Prénom :{{ dataUser.firstname }}</li>
+                <input type="email" v-if="mode == 'update'" v-model="email" placeholder="Email"> 
+                <li class="sectionProfile__card__content__data" v-else>Email :{{ dataUser.email }}</li> 
             </ul>
-            <button class="sectionProfile__card__button" @click="buttonUpdate()">Modifier</button>
+            <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
+            <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="switchToRead()">Annuler</button>
+            <button class="sectionProfile__card__button" v-else @click="switchToUpdate()">Modifier</button>
         </div>
     </section>
 </template>
@@ -28,7 +33,7 @@ export default {
             name:"",
             firstname:"",
             email:"",
-            mode: 'update',
+            mode: 'read',
         };
     },
     methods: {
@@ -47,9 +52,36 @@ export default {
                     console.log({ error });
                 });
         },
+        sendUpdate() {
+            let token = localStorage.getItem("token");
+            let userId = localStorage.getItem("id");
+            axios
+                .put("http://localhost:3000/api/auth/profile/" + userId, {
+                    name: this.name,
+                    firstname: this.firstname,
+                    email: this.email,
+                }, {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.getData();
+                    this.switchToRead();
+                })
+                .catch((error) => {
+                    console.log({ error });
+                });
+        },
+        switchToUpdate() {
+            this.mode = 'update';
+        },
+        switchToRead() {
+            this.mode = 'read';
+        },
     },
     mounted() {
         this.getData();
+        this.sendUpdate();
     },
 }
 </script>
@@ -76,7 +108,7 @@ export default {
                 list-style: none;
                 display: flex;
                 flex-direction: column;
-                align-items: start;
+                align-items: center;
                 &__data{
                     margin-bottom: 15px;
                 }
@@ -91,7 +123,18 @@ export default {
                 @include shadow;
                 text-decoration: none;
                 border: none;
+                margin: 15px 15px 15px 15px;
             }
         }
+    }
+
+    input{
+        width: 90%;
+        height: 40px;
+        border-radius: 5px;
+        border: none;
+        padding: 5px;
+        margin-bottom: 25px;
+        @include shadow;
     }
 </style>
