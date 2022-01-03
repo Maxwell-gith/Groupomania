@@ -37,6 +37,7 @@ exports.modifyProfile = (req, res, next) => {
         .update({
           name: req.body.name,
           firstname: req.body.firstname,
+          email: req.body.email,
         })
         .then(() => res.status(200).json({ message: "Profil modifié !" }))
         .catch((error) =>
