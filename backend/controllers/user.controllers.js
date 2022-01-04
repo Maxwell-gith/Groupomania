@@ -33,8 +33,7 @@ exports.signup = (req, res, next) => {
             password: hash,
             isAdmin: false,
         })
-        .then((user) => {
-            
+        .then((user) => { 
             res.status(201).json({
                 userId: user.id,
                 isAdmin: user.isAdmin,

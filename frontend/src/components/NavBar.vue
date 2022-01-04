@@ -5,8 +5,6 @@
           <li><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
           <li><router-link to="about"><i class="far fa-question-circle"></i></router-link></li>
         </ul>
-        
-        
     </nav>
 </template>
 
@@ -25,7 +23,7 @@
       height: 100px;
       display: flex;
       justify-content: space-between;
-      align-items: end; 
+      align-items: flex-end; 
       padding: 35px 15px 15px 15px;
       &__logo{
         width: 170px;
