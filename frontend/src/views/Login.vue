@@ -125,6 +125,7 @@ input{
     padding: 5px;
     margin-bottom: 25px;
     @include shadow;
+    background-color: $bodyColor;
 }
 
 

@@ -1,10 +1,18 @@
 <template>
   <main>
     <header>
-      <NavBar/>
+      <nav class="navbar">
+          <router-link to="/"><img  class="navbar__logo" src="./assets/logo-white.svg"/></router-link>
+          <ul class="navbar__links">
+            <li><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
+            <li><router-link to="about"><i class="far fa-question-circle"></i></router-link></li>
+          </ul>
+      </nav>
     </header>    
     
-    <router-view/>
+    <section>
+      <router-view/>
+    </section>
 
     <footer>
       <p>copyright Groupomania &copy;</p>
@@ -13,17 +21,18 @@
 </template>
 
 <script>
-import NavBar from './components/NavBar.vue'
 
 export default {
   name: 'App',
   components: {
-    NavBar
+
   }
 }
 </script>
 
 <style lang="scss">
+@import "@/assets/_shared.scss";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -42,6 +51,33 @@ main{
   flex-direction: column;
   min-height: 100vh;
   background-color: #F7F7FF;
+}
+
+.navbar{
+    background-color: $primaryColor;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end; 
+    padding: 35px 15px 15px 15px;
+    &__logo{
+      width: 170px;
+      display: inline-block;
+    }
+    &__links{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+      li{
+        margin-left: 25px;
+        i{
+          font-size: 25px;
+          color: white;
+          cursor: pointer;
+        }
+      }
+    }
 }
 
 footer{
