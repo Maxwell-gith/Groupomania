@@ -29,12 +29,12 @@ export default {
         SwitchToNormalView() {
             this.mode = 'normalView';
         },
-        AddPost() {
+        async AddPost() {
             const data = {
                 title: this.title,
                 text: this.text,
             }
-            axios
+            await axios
                 .post("http://localhost:3000/api/posts", data)
                 .then((res) => {
                     console.log(res);
@@ -44,7 +44,10 @@ export default {
                     console.log(error);
                 })
         },
-    }
+    },
+    mounted() {
+        this.AddPost();
+    },
 }
 </script>
 
@@ -67,7 +70,7 @@ export default {
         justify-content: center;
         align-items: center;
         &__title{
-            width: 80%;
+            width: 90%;
             height: 40px;
             border-radius: 5px;
             border: none;
@@ -78,7 +81,7 @@ export default {
             background-color: $bodyColor;
         }
         &__text{
-            width: 80%;
+            width: 90%;
             height: 80px;
             border-radius: 5px;
             border: none;
@@ -86,6 +89,9 @@ export default {
             margin-bottom: 25px;
             @include shadow;
             background-color: $bodyColor;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
         }
         &__actionButton{
             width: 50%;
@@ -112,38 +118,6 @@ export default {
     }
 }
 
-input{
-    width: 90%;
-    height: 40px;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    @include shadow;
-    background-color: $bodyColor;
-}
-
-.actionButton{
-    width: 50%;
-    height: 40px;
-    padding: 5px;
-    background-color: $tertiaryColor;
-    border-radius: 10px;
-    color: white;
-    @include shadow;
-    text-decoration: none;
-    border: none;
-}
-
-.add-post{
-    width: 90%;
-    height: 40px;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    @include shadow;
-    text-align: start;
-    background-color: $bodyColor;
-}
 </style>
 
 
