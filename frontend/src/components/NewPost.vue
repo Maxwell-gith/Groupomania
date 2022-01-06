@@ -2,7 +2,7 @@
     <div class="newPostCard">
         <form class="newPostCard__form" v-if="mode == 'addPost'">
             <input class="newPostCard__form__title" type="text" placeholder="Titre (facultatif)" v-model="title">
-            <input class="newPostCard__form__text" type="text" placeholder="Votre texte" v-model="title">
+            <input class="newPostCard__form__text" type="text" placeholder="Votre texte" v-model="content">
             <button class="newPostCard__form__actionButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
@@ -19,6 +19,8 @@ export default {
     data() {
         return {
             mode: 'normalView',
+            title: '',
+            content: '',
         }
     },
 
@@ -30,12 +32,19 @@ export default {
             this.mode = 'normalView';
         },
         async AddPost() {
+            let token = localStorage.getItem("token");
+            let userId = localStorage.getItem("id");
             const data = {
                 title: this.title,
-                text: this.text,
+                content: this.content,
+                iduser: userId,
+                image: 'no image',
             }
             await axios
-                .post("http://localhost:3000/api/posts", data)
+                .post("http://localhost:3000/api/auth/posts/", data
+                , {
+                    headers: { Authorization: "Bearer " + token },
+                })
                 .then((res) => {
                     console.log(res);
                     this.SwitchToNormalView();
@@ -44,9 +53,6 @@ export default {
                     console.log(error);
                 })
         },
-    },
-    mounted() {
-        this.AddPost();
     },
 }
 </script>

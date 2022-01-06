@@ -81,7 +81,6 @@ export default {
     },
     mounted() {
         this.getData();
-        this.sendUpdate();
     },
 }
 </script>
