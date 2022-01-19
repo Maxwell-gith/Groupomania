@@ -92,6 +92,7 @@ export default {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    text-align: center;
 }
 
 .signUpCard{

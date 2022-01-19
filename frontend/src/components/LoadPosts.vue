@@ -1,23 +1,57 @@
 <template>
-    <div class="postCard">
-        <figure class="postCard__profileInfos">
-                <img class="postCard__profileInfos__image" src="D:\Desktop\Groupomania v2.0\frontend\src\assets\profilePic .jpg" alt="">
-            <figcaption class="postCard__profileInfos__name">
-                <h2>Michel Robert</h2>
-                <p>01/01/22</p>
-            </figcaption>
-        </figure>
-        <div class="postCard__content">
-            <h2 class="postCard__title">Un bel article</h2>
-            <p class="postCard__text">le texte </p>
+    <div>
+        <div class="postCard" v-for="post in allPosts" :key="post.id">
+            <figure class="postCard__profileInfos">
+                <div class="postCard__profileInfos__image">
+                    <img src="D:\Desktop\Groupomania v2.0\frontend\src\assets\profilePic .jpg" alt="">
+                </div>
+                <figcaption class="postCard__profileInfos__text">
+                    <strong>{{ post.User.name }} {{ post.User.firstname }}</strong>
+                    <p>01/01/2022</p>
+                </figcaption>
+            </figure>
+            <div class="postCard__content">
+                <strong class="postCard__content__title">{{ post.title }}</strong>
+                <p class="postCard__content__text">{{ post.content }}</p>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-    setup() {
-        
+    name: 'loadPosts',
+    data() {
+        return {
+            token: "",
+            userId: localStorage.getItem("id"),
+            isAdmin: "",
+            allPosts: [],
+            idUsers: "",
+            title: "",
+            content: "",
+            createdAt: "",    
+        };
+    },
+    methods: {
+        load() {
+            let token = localStorage.getItem("token");
+            axios
+                .get("http://localhost:3000/api/auth/posts/", {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    this.allPosts = res.data;
+                })
+                .catch((error) => {
+                    console.log({ error });
+                });
+        },
+    },
+    mounted() {
+        this.load();
     },
 }
 </script>
@@ -32,12 +66,39 @@ export default {
     margin-bottom: 25px;
     &__profileInfos{
         display: flex;
+        width: 100%;
         justify-content: space-between;
+        margin-bottom: 15px;
+        padding : 15px;
+        border-bottom: $secondaryColor 2px solid;
+        border-radius: 10px;
         &__image{
-            width: 25px;
-            height: 25px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
+            border: $primaryColor 2px solid;
+            img{
+                width: 100%;
+                height: 100%;
+            }
         }
+        &__text{
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    }
+    &__content{
+        width: 100%;
+        padding : 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        &__title{
+            margin-bottom: 15px;
+        }
+        
     }
 }
 </style>

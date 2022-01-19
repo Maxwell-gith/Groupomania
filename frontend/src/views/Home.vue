@@ -18,8 +18,14 @@ export default {
   components: {
     NewPost,
     LoadPosts,
+  },
+  data () {
+    return {
+      token: "",
+      allPosts: [],
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -32,6 +38,7 @@ export default {
   min-height: 100vh;
   padding-top: 25px;
   padding-bottom: 25px;
+  max-width: 100%;
 }
 
 .componnents {

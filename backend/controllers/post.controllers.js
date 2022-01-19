@@ -22,3 +22,32 @@ exports.createPost = (req, res, next) => {
     })
     .catch((error) => res.status(400).json({ error }));
 };
+
+exports.getAllPosts = (req, res, next) => {
+    models.Post.findAll({
+      order: [["updatedAt", "DESC"]],
+      attributes: [
+        "id",
+        "idUsers",
+        "title",
+        "content",
+        "image",
+        "createdAt",
+        "updatedAt",
+      ],
+      include: [
+        {
+          model: models.User,
+          attributes: ["name", "firstname"],
+        },
+      ],
+    })
+      .then((posts) => {
+        res.status(200).json(posts);
+      })
+      .catch((error) => {
+        res.status(400).json({
+          error: error,
+        });
+      });
+  };
