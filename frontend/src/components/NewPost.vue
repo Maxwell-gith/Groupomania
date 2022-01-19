@@ -69,6 +69,7 @@ export default {
     background-color: $secondaryColor;
     padding-bottom: 15px;
     padding-top: 15px;
+    margin-bottom: 25px;
     &__form{
         width: 100%;
         display: flex;

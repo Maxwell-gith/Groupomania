@@ -3,16 +3,21 @@
     <div class="componnents">
       <NewPost />
     </div>
+    <div class="componnents">
+      <LoadPosts />
+    </div>
   </section>
 </template>
 
 <script>
 import NewPost from '../components/NewPost.vue';
+import LoadPosts from '../components/LoadPosts.vue';
 
 export default {
   name: 'Home',
   components: {
     NewPost,
+    LoadPosts,
   }
 }
 </script>
