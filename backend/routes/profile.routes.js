@@ -4,9 +4,9 @@ const router = express.Router();
 const profileCtrl = require("../controllers/profile.controllers");
 const auth = require("../middleware/auth");
 
-router.get("/profile/:id", auth, profileCtrl.getOneProfile);
+router.get("/:id", auth, profileCtrl.getOneProfile);
 
-router.put("/profile/:id", auth, profileCtrl.modifyProfile);
-router.delete("/profile/:id", auth, profileCtrl.deleteProfile);
+router.put("/:id", auth, profileCtrl.modifyProfile);
+router.delete("/:id", auth, profileCtrl.deleteProfile);
 
 module.exports = router;

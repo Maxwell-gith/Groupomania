@@ -1,10 +1,10 @@
 <template>
   <section class="sectionHome">
     <div class="componnents">
-      <NewPost />
+      <NewPost @loadPosts="loadPosts"/>
     </div>
     <div class="componnents">
-      <LoadPosts />
+      <LoadPosts ref="load"/>
     </div>
   </section>
 </template>
@@ -24,6 +24,9 @@ export default {
       token: "",
       allPosts: [],
     }
+  },
+  methods: {
+    
   }
 };
 </script>

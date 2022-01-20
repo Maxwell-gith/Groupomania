@@ -46,7 +46,7 @@ export default {
                     password: this.password,
                 }
                 await axios
-                    .post("http://localhost:3000/api/auth/signup", data)
+                    .post("http://localhost:3000/api/user/signup", data)
                     .then((res) => {
                         console.log(res);
                         this.switchToLogin();
@@ -60,7 +60,7 @@ export default {
         },
         async buttonLogin() {
             await axios
-                .post("http://localhost:3000/api/auth/login", {
+                .post("http://localhost:3000/api/user/login", {
                     email: this.email,
                     password: this.password,
                 })

@@ -31,6 +31,11 @@ export default {
         SwitchToNormalView() {
             this.mode = 'normalView';
         },
+        LoadPosts() {
+            this.$emit("loadPosts");
+            this.title = "";
+            this.content = "";
+        },
         async AddPost() {
             let token = localStorage.getItem("token");
             let userId = localStorage.getItem("id");
@@ -41,12 +46,13 @@ export default {
                 image: 'no image',
             }
             await axios
-                .post("http://localhost:3000/api/auth/posts/", data
+                .post("http://localhost:3000/api/posts/", data
                 , {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
                     console.log(res);
+                    this.LoadPosts();
                     this.SwitchToNormalView();
                 })
                 .catch((error) => {

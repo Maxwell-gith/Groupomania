@@ -41,7 +41,7 @@ export default {
             let token = localStorage.getItem("token");
             let userId = localStorage.getItem("id");
             axios
-                .get("http://localhost:3000/api/auth/profile/" + userId, {
+                .get("http://localhost:3000/api/profile/" + userId, {
                     headers: { Authorization: "Bearer " + token},
                 })
                 .then((res) => {

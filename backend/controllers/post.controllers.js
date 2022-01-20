@@ -12,7 +12,7 @@ exports.createPost = (req, res, next) => {
         title: req.body.title,
         content: req.body.content,
         image: req.body.image,
-        iduser: req.body.iduser,
+        idUser: req.body.iduser,
     })
     .then((post) => {
         res.status(201).json({
@@ -28,7 +28,7 @@ exports.getAllPosts = (req, res, next) => {
       order: [["updatedAt", "DESC"]],
       attributes: [
         "id",
-        "idUsers",
+        "idUser",
         "title",
         "content",
         "image",

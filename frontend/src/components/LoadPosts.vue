@@ -39,7 +39,7 @@ export default {
         load() {
             let token = localStorage.getItem("token");
             axios
-                .get("http://localhost:3000/api/auth/posts/", {
+                .get("http://localhost:3000/api/posts/", {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
@@ -58,7 +58,12 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/_shared.scss";
-
+div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 .postCard{
     background-color: $secondaryColor;
     width: 90%;
