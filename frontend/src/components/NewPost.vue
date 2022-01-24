@@ -52,7 +52,9 @@ export default {
                 })
                 .then((res) => {
                     console.log(res);
-                    this.LoadPosts();
+                    this.$emit("loadPosts");
+                    this.title = "";
+                    this.content = "";
                     this.SwitchToNormalView();
                 })
                 .catch((error) => {
@@ -67,15 +69,14 @@ export default {
 @import "@/assets/_shared.scss";
 
 .newPostCard{
-    display: flex;
-    justify-content: center;
-    align-items: center;
     width: 90%;
     border-radius: 10px;
     background-color: $secondaryColor;
     padding-bottom: 15px;
     padding-top: 15px;
     margin-bottom: 25px;
+    display: flex;
+    justify-content: center;
     &__form{
         width: 100%;
         display: flex;
@@ -102,9 +103,6 @@ export default {
             margin-bottom: 25px;
             @include shadow;
             background-color: $bodyColor;
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
         }
         &__actionButton{
             width: 50%;

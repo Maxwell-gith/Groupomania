@@ -2,13 +2,16 @@
     <section class="sectionProfile">
         <div class="sectionProfile__card">
             <h1 class="sectionProfile__card__title">Mon profil</h1>
+            <div class="sectionProfile__card__image">
+                <img src="../assets/profilepics.jpg" alt="">
+            </div>
             <ul class="sectionProfile__card__content">
                 <input type="text" v-if="mode == 'update'" v-model="name" placeholder="Nom"> 
-                <li class="sectionProfile__card__content__data" v-else>Nom :{{ dataUser.name }}</li>
+                <li class="sectionProfile__card__content__data" v-else>Nom : {{ dataUser.name }}</li>
                 <input type="text" v-if="mode == 'update'" v-model="firstname" placeholder="Prénom">
-                <li class="sectionProfile__card__content__data" v-else>Prénom :{{ dataUser.firstname }}</li>
+                <li class="sectionProfile__card__content__data" v-else>Prénom : {{ dataUser.firstname }}</li>
                 <input type="email" v-if="mode == 'update'" v-model="email" placeholder="Email"> 
-                <li class="sectionProfile__card__content__data" v-else>Email :{{ dataUser.email }}</li> 
+                <li class="sectionProfile__card__content__data" v-else>Email : {{ dataUser.email }}</li> 
             </ul>
             <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
             <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="switchToRead()">Annuler</button>
@@ -56,7 +59,7 @@ export default {
             let token = localStorage.getItem("token");
             let userId = localStorage.getItem("id");
             axios
-                .put("http://localhost:3000/api/auth/profile/" + userId, {
+                .put("http://localhost:3000/api/profile/" + userId, {
                     name: this.name,
                     firstname: this.firstname,
                     email: this.email,
@@ -90,24 +93,38 @@ export default {
 
     .sectionProfile{
         min-height: 100vh;
+        min-width: 100%;
         display: flex;
         justify-content: center;
-        margin: 35px 0 35px 0;
+        padding: 35px 0 35px 0;
         &__card{
             width: 80%;
             height: 100%;
             border-radius: 10px;
             background-color: $secondaryColor;
             padding: 35px 15px 35px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             &__title{
                 color: $primaryColor;
                 margin-bottom: 35px;
             }
+            &__image{
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                border: $primaryColor 3px solid;
+                overflow: hidden;
+                margin-bottom: 15px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
             &__content{
                 list-style: none;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
                 &__data{
                     margin-bottom: 15px;
                 }
@@ -135,5 +152,18 @@ export default {
         padding: 5px;
         margin-bottom: 25px;
         @include shadow;
+    }
+
+    @media only screen and (min-width: 750px) {
+    .sectionProfile__card{
+        width: 70%;
+        margin-top: 65px;
+    }
+    }
+
+    @media only screen and (min-width: 1024px) {
+    .sectionProfile__card{
+        width: 40%;
+    }
     }
 </style>

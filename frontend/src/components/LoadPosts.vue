@@ -3,10 +3,10 @@
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <figure class="postCard__profileInfos">
                 <div class="postCard__profileInfos__image">
-                    <img src="D:\Desktop\Groupomania v2.0\frontend\src\assets\profilePic .jpg" alt="">
+                    <img src="../assets/profilepics.jpg" alt="">
                 </div>
                 <figcaption class="postCard__profileInfos__text">
-                    <strong>{{ post.User.name }} {{ post.User.firstname }}</strong>
+                    <strong>{{ post.User.firstname }} {{ post.User.name }}</strong>
                     <p>01/01/2022</p>
                 </figcaption>
             </figure>
@@ -81,10 +81,12 @@ div{
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            border: $primaryColor 2px solid;
+            border: $primaryColor 3px solid;
+            overflow: hidden;
             img{
                 width: 100%;
                 height: 100%;
+                object-fit: cover;
             }
         }
         &__text{
@@ -97,9 +99,7 @@ div{
     &__content{
         width: 100%;
         padding : 15px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        align-items: flex-start;
         &__title{
             margin-bottom: 15px;
         }

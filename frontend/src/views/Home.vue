@@ -26,7 +26,9 @@ export default {
     }
   },
   methods: {
-    
+    loadPosts() {
+      this.$refs.load.load();
+    }
   }
 };
 </script>
@@ -37,6 +39,7 @@ export default {
 .sectionHome{
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
   min-height: 100vh;
   padding-top: 25px;
@@ -48,6 +51,18 @@ export default {
   width: 100%;
   display: flex;
   justify-content: center;
+}
+
+@media only screen and (min-width: 750px) {
+  .componnents{
+      width: 65%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+    .componnents{
+        width: 40%;
+    }
 }
 
 </style>
