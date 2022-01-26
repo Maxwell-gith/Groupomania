@@ -26,7 +26,7 @@ export default {
   name: 'App',
   data() {
     return {
-      log: false
+      log: false,
     }
   },
 
