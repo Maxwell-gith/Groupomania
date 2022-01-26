@@ -79,8 +79,8 @@ export default {
         },
         switchToLogin() {
             this.mode = 'login';
-        }
-    }
+        },
+    },
 };
 </script>
 

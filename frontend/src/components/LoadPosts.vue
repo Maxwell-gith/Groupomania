@@ -9,7 +9,8 @@
                     <strong>{{ post.User.firstname }} {{ post.User.name }}</strong>
                     <em>01/01/2022</em>
                 </figcaption>
-                <i class="fas fa-caret-down postCard__profileInfos__more"></i>
+                <i class="fas fa-pen"></i>
+                <i type="submit" @click.prevent="deletePost" class="fas fa-trash-alt"></i>
             </figure>
             <div class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
@@ -33,8 +34,11 @@ export default {
             idUsers: "",
             title: "",
             content: "",
-            createdAt: "",    
+            createdAt: "",  
         };
+    },
+    props: {
+        id: Number,
     },
     methods: {
         load() {
@@ -48,6 +52,22 @@ export default {
                 })
                 .catch((error) => {
                     console.log({ error });
+                });
+        },
+        deletePost() {
+            let token = localStorage.getItem("token");
+            axios
+                .delete(
+                    "http://localhost:3000/api/posts/", {
+                        headers: { Authorization: "Bearer " + token },
+                    }
+                )
+                .then((res) => {
+                    console.log(res);
+                    this.load();
+                })
+                .catch((error) => {
+                    console.log(error);
                 });
         },
     },
@@ -99,9 +119,10 @@ div{
                 font-size: 11px;
             }
         }
-        &__more{
-            font-size: 20px;
-            color: $tertiaryColor;
+        i{
+          font-size: 15px;
+          color: $tertiaryColor;
+          cursor: pointer;
         }
     }
     &__content{

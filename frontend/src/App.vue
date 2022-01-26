@@ -4,8 +4,7 @@
       <nav class="navbar">
           <router-link to="/"><img  class="navbar__logo" src="./assets/logo-white.svg"/></router-link>
           <ul class="navbar__links">
-            <i class="fas fa-caret-down postCard__profileInfos__more"></i>
-            <li><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
+            <li v-if="!log"><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
             <li><router-link to="about"><i class="far fa-question-circle"></i></router-link></li>
           </ul>
       </nav>
@@ -25,10 +24,23 @@
 
 export default {
   name: 'App',
-  components: {
+  data() {
+    return {
+      log: false
+    }
+  },
 
+  methods: {
+    LogOn() {
+      if (localStorage.getItem("token")) this.log = true;
+      else this.log = false;
+    },
+  },
+
+  mounted() {
+    this.LogOn();
   }
-}
+};
 </script>
 
 <style lang="scss">

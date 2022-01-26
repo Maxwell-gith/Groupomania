@@ -51,3 +51,22 @@ exports.getAllPosts = (req, res, next) => {
         });
       });
   };
+
+  exports.deletePost = (req, res, next) => {
+    models.Post.destroy({
+      where: {
+        id: req.params.id,
+      },
+    })
+      .then(() => {
+        res.status(200).json({
+          message: "Post supprimé",
+        });
+      })
+      .catch((error) => res.status(400).json({ error }));
+  };
+
+
+
+
+

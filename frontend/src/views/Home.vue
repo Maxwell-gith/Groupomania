@@ -23,12 +23,13 @@ export default {
     return {
       token: "",
       allPosts: [],
+      mode: 'home',
     }
   },
   methods: {
     loadPosts() {
       this.$refs.load.load();
-    }
+    },
   }
 };
 </script>
