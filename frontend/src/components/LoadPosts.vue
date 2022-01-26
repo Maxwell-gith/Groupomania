@@ -7,8 +7,9 @@
                 </div>
                 <figcaption class="postCard__profileInfos__text">
                     <strong>{{ post.User.firstname }} {{ post.User.name }}</strong>
-                    <p>01/01/2022</p>
+                    <em>01/01/2022</em>
                 </figcaption>
+                <i class="fas fa-caret-down postCard__profileInfos__more"></i>
             </figure>
             <div class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
@@ -92,8 +93,15 @@ div{
         &__text{
             width: 80%;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            em{
+                font-size: 11px;
+            }
+        }
+        &__more{
+            font-size: 20px;
+            color: $tertiaryColor;
         }
     }
     &__content{

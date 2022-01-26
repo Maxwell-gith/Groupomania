@@ -4,6 +4,7 @@
       <nav class="navbar">
           <router-link to="/"><img  class="navbar__logo" src="./assets/logo-white.svg"/></router-link>
           <ul class="navbar__links">
+            <i class="fas fa-caret-down postCard__profileInfos__more"></i>
             <li><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
             <li><router-link to="about"><i class="far fa-question-circle"></i></router-link></li>
           </ul>
@@ -37,7 +38,6 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  // text-align: center;
 }
 
 *{
