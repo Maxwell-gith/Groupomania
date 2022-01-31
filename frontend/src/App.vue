@@ -4,7 +4,7 @@
       <nav class="navbar">
           <router-link to="/"><img  class="navbar__logo" src="./assets/logo-white.svg"/></router-link>
           <ul class="navbar__links">
-            <li v-if="!log"><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
+            <li v-if="log"><router-link to="profile"><i class="far fa-user-circle"></i></router-link></li>
             <li><router-link to="about"><i class="far fa-question-circle"></i></router-link></li>
           </ul>
       </nav>
@@ -31,14 +31,14 @@ export default {
   },
 
   methods: {
-    LogOn() {
+    logOn() {
       if (localStorage.getItem("token")) this.log = true;
       else this.log = false;
     },
   },
 
   mounted() {
-    this.LogOn();
+    this.logOn();
   }
 };
 </script>

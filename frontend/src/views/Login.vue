@@ -68,6 +68,7 @@ export default {
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data.userId);
                     console.log(res);
+                    this.$root.logOn();
                     this.$router.push("/");
                 })
                 .catch((error) => {

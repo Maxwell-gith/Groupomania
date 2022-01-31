@@ -9,10 +9,17 @@
                     <strong>{{ post.User.firstname }} {{ post.User.name }}</strong>
                     <em>01/01/2022</em>
                 </figcaption>
-                <i class="fas fa-pen"></i>
-                <i type="submit" @click.prevent="deletePost" class="fas fa-trash-alt"></i>
+                <i type="submit" @click.prevent="switchToUpdate()" class="fas fa-pen"></i>
+                <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
             </figure>
-            <div class="postCard__content">
+            <div method="post" @submit.prevent="updatePost" v-if="mode == 'update'" class="postCard__content">
+                
+                <input v-if="mode == 'update'" class="postCard__content__title" placeholder= {{ post.title }} v-model="title">
+                <input v-if="mode == 'update'" class="postCard__content__text" placeholder= {{ post.content }} v-model="content">
+                <!-- <button class="postCard__content__actionButton" @click.prevent="updatePost(post.id)">Publier</button> -->
+                <button v-if="mode == 'update'" class="postCard__content__actionButton" @click.prevent="switchToNormalView()">Annuler</button>
+            </div>
+            <div v-else class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
                 <p class="postCard__content__text">{{ post.content }}</p>
             </div>
@@ -34,11 +41,9 @@ export default {
             idUsers: "",
             title: "",
             content: "",
-            createdAt: "",  
+            createdAt: "",
+            mode: "normalView", 
         };
-    },
-    props: {
-        id: Number,
     },
     methods: {
         load() {
@@ -54,11 +59,11 @@ export default {
                     console.log({ error });
                 });
         },
-        deletePost() {
+        deletePost(id) {
             let token = localStorage.getItem("token");
             axios
                 .delete(
-                    "http://localhost:3000/api/posts/", {
+                    "http://localhost:3000/api/posts/" + id,{
                         headers: { Authorization: "Bearer " + token },
                     }
                 )
@@ -70,6 +75,9 @@ export default {
                     console.log(error);
                 });
         },
+        switchToUpdate() {
+            this.mode = "update";
+        }
     },
     mounted() {
         this.load();
