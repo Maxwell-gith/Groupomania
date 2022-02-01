@@ -12,12 +12,13 @@
                 <i type="submit" @click.prevent="switchToUpdate()" class="fas fa-pen"></i>
                 <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
             </figure>
-            <div method="post" @submit.prevent="updatePost" v-if="mode == 'update'" class="postCard__content">
-                
-                <input v-if="mode == 'update'" class="postCard__content__title" placeholder= {{ post.title }} v-model="title">
-                <input v-if="mode == 'update'" class="postCard__content__text" placeholder= {{ post.content }} v-model="content">
-                <!-- <button class="postCard__content__actionButton" @click.prevent="updatePost(post.id)">Publier</button> -->
-                <button v-if="mode == 'update'" class="postCard__content__actionButton" @click.prevent="switchToNormalView()">Annuler</button>
+            <div v-if="mode == 'update'" class="postCard__content">
+                <form method="post" @submit.prevent="updatePost">
+                    <input class="postCard__content__title" placeholder= {{ post.title }} v-model="title">
+                    <input class="postCard__content__text" placeholder= {{ post.content }} v-model="content">
+                    <button class="postCard__content__actionButton" @click.prevent="updatePost(post.id)">Publier</button>
+                    <button class="postCard__content__actionButton" @click.prevent="switchToNormalView()">Annuler</button>
+                </form>
             </div>
             <div v-else class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
