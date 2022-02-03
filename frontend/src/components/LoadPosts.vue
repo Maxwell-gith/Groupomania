@@ -1,24 +1,24 @@
 <template>
-    <div>
+    <div class="postCardContainer">
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <figure class="postCard__profileInfos">
                 <div class="postCard__profileInfos__image">
                     <img src="../assets/profilepics.jpg" alt="">
                 </div>
                 <figcaption class="postCard__profileInfos__text">
-                    <strong>{{ post.User.firstname }} {{ post.User.name }}</strong>
+                    <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
                     <em>01/01/2022</em>
                 </figcaption>
-                <i type="submit" @click.prevent="switchToUpdate()" class="fas fa-pen"></i>
+                <i type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i>
                 <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
             </figure>
-            <div v-if="mode == 'update'" class="postCard__content">
-                <form method="post" @submit.prevent="updatePost">
-                    <input class="postCard__content__title" placeholder= {{ post.title }} v-model="title">
-                    <input class="postCard__content__text" placeholder= {{ post.content }} v-model="content">
-                    <button class="postCard__content__actionButton" @click.prevent="updatePost(post.id)">Publier</button>
-                    <button class="postCard__content__actionButton" @click.prevent="switchToNormalView()">Annuler</button>
-                </form>
+            <div v-if="UpdateId == post.id" class="postCard__content">                                
+                <input class="postCard__content__input" v-model="title">
+                <input class="postCard__content__input" v-model="content">
+                <div class="postCard__content__buttonContainer">
+                    <button class="postCard__content__buttonContainer__button" @click.prevent="UpdatePost(post.id)">Publier</button>
+                    <button class="postCard__content__buttonContainer__button" @click="UpdateId=-1">Annuler</button>                     
+                </div>                    
             </div>
             <div v-else class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
@@ -43,7 +43,7 @@ export default {
             title: "",
             content: "",
             createdAt: "",
-            mode: "normalView", 
+            UpdateId:-1,
         };
     },
     methods: {
@@ -73,11 +73,36 @@ export default {
                     this.load();
                 })
                 .catch((error) => {
-                    console.log(error);
+                    console.log(error); 
                 });
         },
-        switchToUpdate() {
-            this.mode = "update";
+
+       async UpdatePost(idPost) {
+            let token = localStorage.getItem("token");
+            //let userId = localStorage.getItem("id");
+            const data = {
+                title: this.title,
+                content: this.content,                
+            }
+            await axios
+                .put("http://localhost:3000/api/posts/" + idPost, data
+                , {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.load();
+                    this.title = "";
+                    this.content = "";
+                    this. UpdateId=-1;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
+
+        switchToUpdate(Id) {
+            this.UpdateId = Id;
         }
     },
     mounted() {
@@ -94,6 +119,7 @@ div{
     flex-direction: column;
     align-items: center;
 }
+
 .postCard{
     background-color: $secondaryColor;
     width: 90%;
@@ -141,7 +167,32 @@ div{
         &__title{
             margin-bottom: 15px;
         }
-        
+        &__input{
+            width: 100%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            padding: 5px;
+            margin-bottom: 25px;
+            @include shadow;
+            background-color: $bodyColor;
+        }
+        &__buttonContainer {
+            display: flex;
+            justify-content: space-around;
+            flex-direction: row;
+            &__button{
+                width: 40%;
+                height: 40px;
+                padding: 5px;
+                background-color: $tertiaryColor;
+                border-radius: 10px;
+                color: white;
+                @include shadow;
+                text-decoration: none;
+                border: none;
+            }
+        }  
     }
 }
 </style>

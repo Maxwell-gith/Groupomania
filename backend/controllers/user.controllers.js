@@ -58,12 +58,12 @@ exports.login = (req, res, next) => {
                     }
                     res.status(200).json({
                         userId: user.id,
-                        token: jwt.sign(
-                            { userId: user.id },
-                            'RANDOM_TOKEN_SECRET',
-                            { expiresIn: '24h' }
-                        )
-                    });
+                        name: user.name,
+                        firstname: user.firstname,
+                        token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, "RANDOM_TOKEN_SECRET", {
+                          expiresIn: "24h",
+                        }),
+                      });          
                     user.email = MaskData.maskEmail2(req.body.email, emailMask2Options)
                 })
                 .catch(error => res.status(500).json({ error }));

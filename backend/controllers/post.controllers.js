@@ -1,7 +1,6 @@
 const models = require("../models");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
-const { post } = require("../routes/post.routes");
 
 exports.createPost = (req, res, next) => {
     if (!req.body.title || !req.body.content) {
@@ -53,25 +52,54 @@ exports.getAllPosts = (req, res, next) => {
       });
   };
 
+  exports.modifyPost = (req, res, next) => {  
+    const token = req.headers.authorization.split(" ")[1];
+    const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+    const userId = decodedToken.userId;
+
+    if (req.body.title == "" || req.body.content == "") {
+      return res
+        .status(400)
+        .json({ error: "Merci de remplir tous les champs !" });
+    }  
+    models.Post.findOne({
+      where: { id: req.params.id  },
+    })
+    .then((post) => { 
+      if (post.idUser === userId) {        
+        post.update({
+            title: req.body.title,
+            content: req.body.content          
+        })  
+          .then(() => res.status(200).json({ message: "Message modifié !" }))
+          .catch((error) =>
+            res.status(400).json({ error: "Impossible de mettre à jour ce Message !" })
+          );
+    }});
+  };
+
   exports.deletePost = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
     const isAdmin = decodedToken.isAdmin;
-    const postIdUser = req.params.idUser;
-
-    if (postIdUser != userId || isAdmin === false) {
-      return res.status(400).json({
-          error: "Vous n'avez pas l'autorisation requise pour faire cela",
+ 
+    models.Post.findOne({
+      where: { id: req.params.id },
+    })
+      .then((post) => {  
+        if (post.idUser === userId || isAdmin === true) {        
+          post.destroy()
+              .then(() => {
+                res.status(200).json({ message: "Message supprimé !" });
+              })
+              .catch((error) => {
+                res.status(400).json({ error: error, message: "Le message n'a pas pu être supprimé" });
+              });
+        }})
+      .catch((error) => {
+        res.status(400).json({ error: error });
       });
-    }
-    models.Post.destroy({where: {id: req.params.id}})
-      .then(() => {
-        res.status(200).json({
-          message: "Post supprimé",
-        });
-      })
-      .catch((error) => res.status(400).json({ error }));
   };
 
 
