@@ -24,14 +24,18 @@
                 <strong class="postCard__content__title">{{ post.title }}</strong>
                 <p class="postCard__content__text">{{ post.content }}</p>
             </div>
+            <NewComment />
         </div>
+
     </div>
 </template>
 
 <script>
 import axios from "axios";
+import NewComment from './NewComment.vue';
 
 export default {
+    components: { NewComment },
     name: 'loadPosts',
     data() {
         return {

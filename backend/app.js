@@ -5,6 +5,7 @@ const path = require ("path");
 const userRoutes = require("./routes/user.routes");
 const profileRoutes = require("./routes/profile.routes");
 const postRoutes = require("./routes/post.routes");
+const commentRoutes = require("./routes/comment.routes");
 
 
 app.use((req, res, next) => {
@@ -27,5 +28,6 @@ app.use((req, res, next) => {
   app.use("/api/user", userRoutes);
   app.use("/api/profile", profileRoutes);
   app.use("/api/posts", postRoutes);
+  app.use("/api/comments", commentRoutes);
 
   module.exports = app;
