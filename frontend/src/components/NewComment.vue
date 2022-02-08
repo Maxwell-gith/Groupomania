@@ -3,8 +3,8 @@
     <button class="toAddComment" @click.prevent="SwitchToAddComment()">Ajouter un commentaire</button>
     <div v-if="mode == 'addComment'" class="addComment">
         <form>
-            <input class="addComment__input" type="text" v-model="comment" placeholder="Votre commentaire" />
-            <button class="addComment__button" @click.prevent="addComment(comment.id)" >Ajouter</button>
+            <input class="addComment__input" type="text" v-model="content" placeholder="Votre commentaire" />
+            <button class="addComment__button" @click.prevent="addComment()" >Ajouter</button>
             <button class="addComment__button" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
     </div>    
@@ -19,16 +19,17 @@ export default {
     data() {
         return {
             mode: 'normalView',
-            comment: '',
+            content: '',
         }
     },
     methods: {
-        async addComment() {
+        addComment() {
             let token = localStorage.getItem("token");
             const data = {
                 comment: this.comment,
+                idUser: localStorage.getItem("id"),
             }
-            await axios
+            axios
                 .post("http://localhost:3000/api/comments/", data
                 , {
                     headers: { Authorization: "Bearer " + token },
