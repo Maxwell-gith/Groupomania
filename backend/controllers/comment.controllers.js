@@ -10,9 +10,9 @@ exports.createComment = (req, res, next) => {
     }
     models.Comment.create({
         content: req.body.content,
-        image: req.body.image,
         idUser: req.body.idUser,
-        idPost: req.params.idPost,
+        idPost: req.body.idPost,
+        image: 'no image',
     })
         .then((comment) => {
             res.status(201).json({

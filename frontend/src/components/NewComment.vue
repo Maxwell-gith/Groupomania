@@ -22,12 +22,16 @@ export default {
             content: '',
         }
     },
+    props: {
+        idPost: Number,
+    },
     methods: {
         addComment() {
             let token = localStorage.getItem("token");
             const data = {
-                comment: this.comment,
+                content: this.content,
                 idUser: localStorage.getItem("id"),
+                idPost: this.idPost,
             }
             axios
                 .post("http://localhost:3000/api/comments/", data
@@ -37,7 +41,7 @@ export default {
                 .then((res) => {
                     console.log(res);
                     this.$emit("loadComments");
-                    this.comment = "";
+                    this.content = "";
                     this.SwitchToNormalView();
                 })
                 .catch((error) => {

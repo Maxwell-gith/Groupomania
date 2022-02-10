@@ -24,7 +24,7 @@
                 <strong class="postCard__content__title">{{ post.title }}</strong>
                 <p class="postCard__content__text">{{ post.content }}</p>
             </div>
-            <NewComment />
+            <NewComment :idPost="post.id" />
         </div>
 
     </div>
