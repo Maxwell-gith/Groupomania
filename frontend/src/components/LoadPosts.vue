@@ -7,7 +7,7 @@
                 </div>
                 <figcaption class="postCard__profileInfos__text">
                     <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
-                    <em>01/01/2022</em>
+                    <em>{{post.createdAt}}</em>
                 </figcaption>
                 <i type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i>
                 <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>

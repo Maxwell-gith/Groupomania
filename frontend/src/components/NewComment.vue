@@ -1,12 +1,24 @@
 <template>
 <div>
-    <button class="toAddComment" @click.prevent="SwitchToAddComment()">Ajouter un commentaire</button>
-    <div v-if="mode == 'addComment'" class="addComment">
+    <button class="toComment" @click.prevent="SwitchToComment(), loadComments(post.id)">Ajouter un commentaire</button>
+    <div v-if="mode == 'comment'" class="comment">
         <form>
-            <input class="addComment__input" type="text" v-model="content" placeholder="Votre commentaire" />
-            <button class="addComment__button" @click.prevent="addComment()" >Ajouter</button>
-            <button class="addComment__button" @click.prevent="SwitchToNormalView()">Annuler</button>
+            <input class="comment__input" type="text" v-model="content" placeholder="Votre commentaire" />
+            <button class="comment__button" @click.prevent="addComment()" >Ajouter</button>
+            <button class="comment__button" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
+        <div class="comment__view" v-for="comment in allComments" :key="comment.id">
+            <div class="comment__view__card">
+                <figure>
+                    <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
+                </figure>
+                <figcaption>
+                    <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
+                    <em>{{ comment.createdAt }}</em>
+                    <p>{{ comment.content }}</p>
+                </figcaption>
+            </div>
+        </div>
     </div>    
 </div>
 </template>
@@ -20,6 +32,7 @@ export default {
         return {
             mode: 'normalView',
             content: '',
+            allComments: [],
         }
     },
     props: {
@@ -42,14 +55,30 @@ export default {
                     console.log(res);
                     this.$emit("loadComments");
                     this.content = "";
-                    this.SwitchToNormalView();
+                    // this.SwitchToNormalView();
                 })
                 .catch((error) => {
                     console.log(error);
                 })
         },
-        SwitchToAddComment() {
-            this.mode = 'addComment';
+        loadComments() {
+            let token = localStorage.getItem("token");
+            axios
+                .get("http://localhost:3000/api/comments/", {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    this.allComments = res.data;
+                    console.log(this.allComments);
+                    console.log('test');
+                })
+                .catch((error) => {
+                    console.log(error);
+
+                });
+        },
+        SwitchToComment() {
+            this.mode = 'comment';
         },
         SwitchToNormalView() {
             this.mode = 'normalView';
