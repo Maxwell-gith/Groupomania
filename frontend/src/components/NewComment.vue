@@ -4,7 +4,7 @@
     <div v-if="mode == 'comment'" class="comment">
         <form>
             <input class="comment__input" type="text" v-model="content" placeholder="Votre commentaire" />
-            <button class="comment__button" @click.prevent="addComment()" >Ajouter</button>
+            <button class="comment__button" @click.prevent="addComment()">Ajouter</button>
             <button class="comment__button" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
         <div class="comment__view" v-for="comment in allComments" :key="comment.id">
@@ -53,9 +53,8 @@ export default {
                 })
                 .then((res) => {
                     console.log(res);
-                    this.$emit("loadComments");
+                    this.loadComments();
                     this.content = "";
-                    // this.SwitchToNormalView();
                 })
                 .catch((error) => {
                     console.log(error);
@@ -64,13 +63,13 @@ export default {
         loadComments() {
             let token = localStorage.getItem("token");
             axios
-                .get("http://localhost:3000/api/comments/", {
+                .get("http://localhost:3000/api/comments/", + this.idPost, {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
                     this.allComments = res.data;
                     console.log(this.allComments);
-                    console.log('test');
+                    this.loadComments();
                 })
                 .catch((error) => {
                     console.log(error);
@@ -83,7 +82,7 @@ export default {
         SwitchToNormalView() {
             this.mode = 'normalView';
         },
-},
+    },
 }
 </script>
 
