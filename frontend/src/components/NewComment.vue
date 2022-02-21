@@ -1,6 +1,6 @@
 <template>
 <div>
-    <button class="toComment" @click.prevent="SwitchToComment(), loadComments(post.id)">Ajouter un commentaire</button>
+    <button class="toComment" @click.prevent="SwitchToComment(), loadComments()">Ajouter un commentaire</button>
     <div v-if="mode == 'comment'" class="comment">
         <form>
             <input class="comment__input" type="text" v-model="content" placeholder="Votre commentaire" />
@@ -63,13 +63,12 @@ export default {
         loadComments() {
             let token = localStorage.getItem("token");
             axios
-                .get("http://localhost:3000/api/comments/", + this.idPost, {
+                .get("http://localhost:3000/api/comments/" + this.idPost, {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
                     this.allComments = res.data;
                     console.log(this.allComments);
-                    this.loadComments();
                 })
                 .catch((error) => {
                     console.log(error);
