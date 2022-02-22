@@ -93,6 +93,9 @@ export default {
             margin-top: 25px;
             @include shadow;
             background-color: $bodyColor;
+                &:focus {
+                outline: none;
+            }
         }
         &__text{
             width: 90%;
@@ -103,6 +106,9 @@ export default {
             margin-bottom: 25px;
             @include shadow;
             background-color: $bodyColor;
+                &:focus {
+                outline: none;
+            }
         }
         &__actionButton{
             width: 50%;
