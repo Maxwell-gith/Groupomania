@@ -6,8 +6,12 @@
             <button class="newPostCard__form__actionButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
-
-        <button class="newPostCard__btnAddPost" @click.prevent="SwitchToAddPost()" v-else>Exprimez-vous!</button>
+        <div v-else class="newPostCard__toAddPost">
+            <div class="newPostCard__toAddPost__image">
+                <img src="../assets/profilepics.jpg" alt="" />
+            </div>
+            <button class="newPostCard__toAddPost__btnAddPost" @click.prevent="SwitchToAddPost()">Exprimez-vous!</button>
+        </div>
     </div>
 </template>
 
@@ -72,8 +76,7 @@ export default {
     width: 90%;
     border-radius: 10px;
     background-color: $secondaryColor;
-    padding-bottom: 15px;
-    padding-top: 15px;
+    padding: 15px;
     margin-bottom: 25px;
     display: flex;
     justify-content: center;
@@ -123,16 +126,34 @@ export default {
             border: none;
         }
     }
-    &__btnAddPost{
-        width: 90%;
-        height: 40px;
-        border-radius: 5px;
-        border: none;
-        padding: 5px;
-        @include shadow;
-        text-align: start;
-        background-color: $bodyColor;
+    &__toAddPost{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        &__image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: $primaryColor 3px solid;
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &__btnAddPost{
+            width: 90%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            padding: 5px;
+            @include shadow;
+            text-align: start;
+            background-color: $bodyColor;
+        }
     }
+
 }
 
 </style>

@@ -3,20 +3,27 @@
     <button v-if="mode == 'normalView'" class="toCommentButton" @click.prevent="SwitchToComment(), loadComments()">Commentaire(s)</button>
     <button v-else class="toCommentButton" @click.prevent="SwitchToNormalView()">Commentaire(s)</button>
     <form class="sendComment">
+        <div class="sendComment__image">
+            <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
+        </div>
         <input class="sendComment__input" type="text" v-model="content" placeholder="Votre commentaire" />
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
-    <div v-if="mode == 'comment'" class="comment">
-        <div class="comment__view" v-for="comment in allComments" :key="comment.id">
-            <div class="comment__view__card">
-                <figure>
-                    <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
+    <div v-if="mode == 'comment'">
+        <div class="commentContainer" v-for="comment in allComments" :key="comment.id">
+            <div class="comment">
+                <figure class="comment__infos">
+                    <div class="comment__infos__image">
+                        <img src="../assets/profilepics.jpg" alt="" />
+                    </div>
+                    <figcaption class="comment__infos__text">
+                        <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
+                        <em>{{ comment.createdAt }}</em>
+                    </figcaption>
+                    <i type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" class="fas fa-pen"></i>
+                    <i type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i>
                 </figure>
-                <figcaption>
-                    <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
-                    <em>{{ comment.createdAt }}</em>
-                    <p>{{ comment.content }}</p>
-                </figcaption>
+                <p class="comment__content">{{ comment.content }}</p>
             </div>
         </div>
     </div>    
@@ -75,21 +82,6 @@ export default {
 
                 });
         },
-        countComments() {
-            let token = localStorage.getItem("token");
-            axios
-                .get("http://localhost:3000/api/comments/" + this.idPost, {
-                    headers: { Authorization: "Bearer " + token },
-                })
-                .then((res) => {
-                    this.allComments = res.data;
-                    console.log(this.allComments);
-                })
-                .catch((error) => {
-                    console.log(error);
-
-                });
-        },
         SwitchToComment() {
             this.mode = 'comment';
         },
@@ -102,15 +94,36 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/assets/_shared.scss";
+    .toCommentButton {
+        background-color: transparent;
+        border: none;
+        font-weight: bold;
+        border-top: $secondaryColor 2px solid;
+        text-align: end;
+        padding: 15px;
+        width: 100%;
+    }
     .sendComment {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
         width: 100%;
-        margin: 20px 0 20px 0;
+        padding: 15px;
+        &__image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: $primaryColor 3px solid;
+            overflow: hidden;
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
         &__input {
-            width: 70%;
+            width: 80%;
             height: 40px;
             border-radius: 5px;
             border: none;
@@ -142,6 +155,59 @@ export default {
             }
         }
     }
+div{
+    width: 100%;
+}
+.commentContainer{
+    padding: 15px;
+}
+.comment{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    border: $secondaryColor 2px solid;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    @include shadow;
+    &__infos {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        padding: 15px;
+        border-bottom: $secondaryColor 2px solid;
+        border-radius: 10px;
+        &__image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: $primaryColor 3px solid;
+            overflow: hidden;
+            margin-right: 10px;
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+        &__text {
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            em{
+                font-size: 11px;
+            }
+        }
+    }
+    &__content {
+        width: 100%;
+        padding: 15px;
+        text-align: justify;
+        word-wrap: break-word;
+    }
+}
 
 </style>
     

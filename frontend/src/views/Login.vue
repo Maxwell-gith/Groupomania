@@ -128,7 +128,12 @@ input{
     margin-bottom: 25px;
     @include shadow;
     background-color: $bodyColor;
+    &:focus {
+        outline: none;
+    }
 }
+
+
 
 
 h1{

@@ -170,6 +170,12 @@ div{
         align-items: flex-start;
         &__title{
             margin-bottom: 15px;
+            text-align: justify;
+            word-wrap: break-word;
+        }
+        &__text{
+            text-align: justify;
+            word-wrap: break-word;
         }
         &__input{
             width: 100%;
