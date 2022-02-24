@@ -23,7 +23,12 @@
                     <i type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" class="fas fa-pen"></i>
                     <i type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i>
                 </figure>
-                <p class="comment__content">{{ comment.content }}</p>
+                <div v-if="UpdateId == comment.id" class="comment__modify">
+                    <input class="comment__modify__input" v-model="content" />
+                    <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
+                </div>
+                <button v-if="UpdateId == comment.id" class="toCommentButton" @click.prevent="SwitchToNormalView()">Annuler</button>
+                <p v-else class="comment__content">{{ comment.content }}</p>
             </div>
         </div>
     </div>    
@@ -40,6 +45,9 @@ export default {
             mode: 'normalView',
             content: '',
             allComments: [],
+            UpdateId:-1,
+            userId: localStorage.getItem("id"),
+            isAdmin: "",
         }
     },
     props: {
@@ -82,12 +90,50 @@ export default {
 
                 });
         },
+        deleteComment(id) {
+            let token = localStorage.getItem("token");
+            axios
+                .delete("http://localhost:3000/api/comments/" + id, {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.loadComments();
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
+        updateComment(idComment) {
+            let token = localStorage.getItem("token");
+            const data = {
+                content: this.content,
+            }
+            axios
+                .put("http://localhost:3000/api/comments/" + idComment, data
+                , {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    console.log(res);
+                    this.loadComments();
+                    this.content = "";
+                    this.UpdateId = -1;
+                })
+                .catch((error) => {
+                    console.log(error);
+                })
+        },
         SwitchToComment() {
             this.mode = 'comment';
         },
         SwitchToNormalView() {
             this.mode = 'normalView';
+            this.content = "";
         },
+        switchToUpdate(Id) {
+            this.UpdateId = Id;
+        }
     },
 }
 </script>
@@ -164,6 +210,8 @@ div{
 .comment{
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     border: $secondaryColor 2px solid;
     border-radius: 10px;
@@ -201,12 +249,52 @@ div{
             }
         }
     }
+    &__modify{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        &__input{
+            width: 80%;
+            height: 40px;
+            border-radius: 5px;
+            border: none;
+            padding: 5px;
+            @include shadow;
+            text-align: start;
+            background-color: $bodyColor;
+            margin-bottom: 15px;
+            &:focus {
+                outline: none;
+            }
+        }
+        &__button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            padding: 5px;
+            @include shadow;
+            background-color: $tertiaryColor;
+            color: $bodyColor;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            &:focus {
+                outline: none;
+            }
+            &__icon {
+                color: $bodyColor;
+            }
+        }
+    }
     &__content {
         width: 100%;
         padding: 15px;
         text-align: justify;
         word-wrap: break-word;
     }
+
 }
 
 </style>

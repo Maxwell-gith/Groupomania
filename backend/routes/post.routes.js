@@ -9,7 +9,6 @@ const multer = require("../middleware/multer-config");
 
 // Routes de l'API pour les Posts
 router.get("/", auth, postCtrl.getAllPosts);
-// router.get("/:id", auth, postCtrl.getOnePost);
 router.post("/", auth, postCtrl.createPost);
 router.delete("/:id", auth, postCtrl.deletePost);
 router.put("/:id", auth, postCtrl.modifyPost);
