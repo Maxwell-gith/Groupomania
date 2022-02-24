@@ -1,10 +1,10 @@
 <template>
     <div class="newPostCard">
         <form class="newPostCard__form" v-if="mode == 'addPost'">
-            <input class="newPostCard__form__title" type="text" placeholder="Titre (facultatif)" v-model="title">
-            <input class="newPostCard__form__text" type="textarea" placeholder="Votre texte" v-model="content">
-            <button class="newPostCard__form__actionButton" @click.prevent="AddPost()">Publier</button>
-            <button class="newPostCard__form__actionButton" @click.prevent="SwitchToNormalView()">Annuler</button>
+            <input class="newPostCard__form__title styleInput" type="text" placeholder="Titre (facultatif)" v-model="title">
+            <input class="newPostCard__form__text styleInput" type="textarea" cols="60" row="20" placeholder="Votre texte" v-model="content">
+            <button class="newPostCard__form__actionButton primaryButton" @click.prevent="AddPost()">Publier</button>
+            <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
         <div v-else class="newPostCard__toAddPost">
             <div class="newPostCard__toAddPost__image">
@@ -90,41 +90,17 @@ export default {
         &__title{
             width: 90%;
             height: 40px;
-            border-radius: 5px;
-            border: none;
-            padding: 5px;
             margin-bottom: 25px;
-            margin-top: 25px;
-            @include shadow;
-            background-color: $bodyColor;
-                &:focus {
-                outline: none;
-            }
         }
         &__text{
             width: 90%;
             height: 80px;
-            border-radius: 5px;
-            border: none;
-            padding: 5px;
             margin-bottom: 25px;
-            @include shadow;
-            background-color: $bodyColor;
-                &:focus {
-                outline: none;
-            }
         }
         &__actionButton{
             width: 50%;
             height: 40px;
-            padding: 5px;
             margin-bottom: 25px;
-            background-color: $tertiaryColor;
-            border-radius: 10px;
-            color: white;
-            @include shadow;
-            text-decoration: none;
-            border: none;
         }
     }
     &__toAddPost{

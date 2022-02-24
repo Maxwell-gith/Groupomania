@@ -52,6 +52,41 @@ export default {
 <style lang="scss">
 @import "@/assets/_shared.scss";
 
+// Classes CSS a utilisés pour les éléments répétitifs présents dans le code 
+.primaryButton{
+  padding: 5px;
+  background-color: $tertiaryColor;
+  border-radius: 10px;
+  color: white;
+  @include shadow;
+  text-decoration: none;
+  border: none;
+  font-weight: 700;
+}
+
+.secondaryButton{
+  padding: 5px;
+  border: $tertiaryColor 3px solid;
+  background-color: $secondaryColor;
+  color: $tertiaryColor;
+  border-radius: 10px;
+  @include shadow;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.styleInput {
+    border-radius: 5px;
+    border: none;
+    padding: 5px;
+    @include shadow;
+    background-color: $bodyColor;
+    &:focus {
+        outline: none;
+    }
+}
+
+// Reset et fonts
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -64,6 +99,7 @@ export default {
   padding: 0px;
 }
 
+// CSS de la page
 main{
   display: flex;
   flex-direction: column;

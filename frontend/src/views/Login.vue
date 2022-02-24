@@ -7,13 +7,13 @@
         <p class="signUpCard__subtitle" v-if="mode == 'login'">Pas encore inscrit ? <span @click="switchToCreateAccount()">Créer un compte</span></p>
         <p class="signUpCard__subtitle" v-else>Déjà inscrit ? <span @click="switchToLogin()">Se connecter</span></p>
         <form method="post" @submit.prevent="CreateAccount" >
-            <input type="text" v-if="mode == 'createAccount'" v-model="name" placeholder="Nom">
-            <input type="text" v-if="mode == 'createAccount'" v-model="firstname" placeholder="Prénom">
-            <input type="email" v-model="email" placeholder="Email">
-            <input type="password" v-model="password" placeholder="Mot de passe">
-            <input type="password" v-if="mode == 'createAccount'" v-model="confirmPassword" placeholder="Confirmation Mot de passe">
-            <button type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin()">Se connecter</button>
-            <button type="submit" v-else @click.prevent="buttonCreateAccount()">S'inscrire</button>
+            <input class="styleInput" type="text" v-if="mode == 'createAccount'" v-model="name" placeholder="Nom">
+            <input class="styleInput" type="text" v-if="mode == 'createAccount'" v-model="firstname" placeholder="Prénom">
+            <input class="styleInput" type="email" v-model="email" placeholder="Email">
+            <input class="styleInput" type="password" v-model="password" placeholder="Mot de passe">
+            <input class="styleInput" type="password" v-if="mode == 'createAccount'" v-model="confirmPassword" placeholder="Confirmation Mot de passe">
+            <button class="primaryButton" type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin()">Se connecter</button>
+            <button class="primaryButton" type="submit" v-else @click.prevent="buttonCreateAccount()">S'inscrire</button>
         </form>
     </div>
 </section>
@@ -122,19 +122,7 @@ export default {
 input{
     width: 80%;
     height: 40px;
-    border-radius: 5px;
-    border: none;
-    padding: 5px;
-    margin-bottom: 25px;
-    @include shadow;
-    background-color: $bodyColor;
-    &:focus {
-        outline: none;
-    }
 }
-
-
-
 
 h1{
     margin-bottom: 15px;
@@ -144,13 +132,6 @@ h1{
 button{
     width: 50%;
     height: 40px;
-    padding: 5px;
-    background-color: $tertiaryColor;
-    border-radius: 10px;
-    color: white;
-    @include shadow;
-    text-decoration: none;
-    border: none;
 }
 
 @media only screen and (min-width: 750px) {

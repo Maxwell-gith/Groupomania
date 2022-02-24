@@ -1,12 +1,12 @@
 <template>
 <div>
-    <button v-if="mode == 'normalView'" class="toCommentButton" @click.prevent="SwitchToComment(), loadComments()">Commentaire(s)</button>
-    <button v-else class="toCommentButton" @click.prevent="SwitchToNormalView()">Commentaire(s)</button>
+    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
+    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
     <form class="sendComment">
         <div class="sendComment__image">
             <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
         </div>
-        <input class="sendComment__input" type="text" v-model="content" placeholder="Votre commentaire" />
+        <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
     <div v-if="mode == 'comment'">
@@ -24,10 +24,10 @@
                     <i type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i>
                 </figure>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
-                    <input class="comment__modify__input" v-model="content" />
+                    <input class="comment__modify__input styleInput" v-model="content" />
                     <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
                 </div>
-                <button v-if="UpdateId == comment.id" class="toCommentButton" @click.prevent="SwitchToNormalView()">Annuler</button>
+                <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
                 <p v-else class="comment__content">{{ comment.content }}</p>
             </div>
         </div>
@@ -69,6 +69,7 @@ export default {
                 .then((res) => {
                     console.log(res);
                     this.loadComments();
+                    this.SwitchToComment();
                     this.content = "";
                 })
                 .catch((error) => {
@@ -141,13 +142,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/_shared.scss";
     .toCommentButton {
-        background-color: transparent;
-        border: none;
-        font-weight: bold;
-        border-top: $secondaryColor 2px solid;
-        text-align: end;
-        padding: 15px;
-        width: 100%;
+        height: 40px;
+        width: 50%;
+        margin-top: 15px;
     }
     .sendComment {
         display: flex;
@@ -171,15 +168,6 @@ export default {
         &__input {
             width: 80%;
             height: 40px;
-            border-radius: 5px;
-            border: none;
-            padding: 5px;
-            @include shadow;
-            text-align: start;
-            background-color: $bodyColor;
-            &:focus {
-                outline: none;
-            }
         }
         &__button {
             width: 40px;
@@ -213,10 +201,11 @@ div{
     justify-content: center;
     align-items: center;
     width: 100%;
-    border: $secondaryColor 2px solid;
+    border: $bodyColor 2px solid;
     border-radius: 10px;
     margin-bottom: 15px;
     @include shadow;
+    background-color: $bodyColor;
     &__infos {
         display: flex;
         align-items: center;
@@ -257,16 +246,6 @@ div{
         &__input{
             width: 80%;
             height: 40px;
-            border-radius: 5px;
-            border: none;
-            padding: 5px;
-            @include shadow;
-            text-align: start;
-            background-color: $bodyColor;
-            margin-bottom: 15px;
-            &:focus {
-                outline: none;
-            }
         }
         &__button {
             width: 40px;
@@ -287,6 +266,11 @@ div{
                 color: $bodyColor;
             }
         }
+    }
+    .stopModifyButton{
+        margin-bottom: 25px;
+        height: 40px;
+        width: 50%;
     }
     &__content {
         width: 100%;

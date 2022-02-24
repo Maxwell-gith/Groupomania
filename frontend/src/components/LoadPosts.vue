@@ -13,16 +13,16 @@
                 <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
             </figure>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
-                <input class="postCard__content__input" v-model="title">
-                <input class="postCard__content__input" v-model="content">
+                <input class="postCard__content__input styleInput" v-model="title">
+                <input class="postCard__content__input styleInput" v-model="content">
                 <div class="postCard__content__buttonContainer">
-                    <button class="postCard__content__buttonContainer__button" @click.prevent="UpdatePost(post.id)">Publier</button>
-                    <button class="postCard__content__buttonContainer__button" @click="UpdateId=-1">Annuler</button>                     
+                    <button class="postCard__content__buttonContainer__button primaryButton" @click.prevent="UpdatePost(post.id)">Modifier</button>
+                    <button class="postCard__content__buttonContainer__button secondaryButton" @click="UpdateId=-1">Annuler</button>                     
                 </div>                    
             </div>
             <div v-else class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
-                <p class="postCard__content__text">{{ post.content }}</p>
+                <p class="postCard__content__text" style="word-wrap: break-word;">{{ post.content }}</p>
             </div>
             <NewComment :idPost="post.id" />
         </div>
@@ -83,7 +83,6 @@ export default {
 
        async UpdatePost(idPost) {
             let token = localStorage.getItem("token");
-            //let userId = localStorage.getItem("id");
             const data = {
                 title: this.title,
                 content: this.content,                
@@ -168,24 +167,22 @@ div{
         width: 100%;
         padding : 15px;
         align-items: flex-start;
+                border-bottom: $secondaryColor 2px solid;
         &__title{
+            width: 100%;
             margin-bottom: 15px;
             text-align: justify;
             word-wrap: break-word;
         }
         &__text{
+            width: 100%;
             text-align: justify;
             word-wrap: break-word;
         }
         &__input{
             width: 100%;
             height: 40px;
-            border-radius: 5px;
-            border: none;
-            padding: 5px;
             margin-bottom: 25px;
-            @include shadow;
-            background-color: $bodyColor;
         }
         &__buttonContainer {
             display: flex;
@@ -194,13 +191,7 @@ div{
             &__button{
                 width: 40%;
                 height: 40px;
-                padding: 5px;
-                background-color: $tertiaryColor;
-                border-radius: 10px;
-                color: white;
-                @include shadow;
-                text-decoration: none;
-                border: none;
+                margin-bottom: 25px;
             }
         }  
     }
