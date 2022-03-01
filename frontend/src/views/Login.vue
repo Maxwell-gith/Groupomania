@@ -111,7 +111,7 @@ export default {
         font-size: 14px;
         font-weight: bold;
         color: #808080;
-        margin-bottom: 15px;
+        margin-bottom: 25px;
         span{
             color: $primaryColor;
             cursor: pointer;
@@ -122,16 +122,18 @@ export default {
 input{
     width: 80%;
     height: 40px;
+    margin-bottom: 25px;
 }
 
 h1{
-    margin-bottom: 15px;
+    margin-bottom: 25px;
     color: $primaryColor;
 }
 
 button{
     width: 50%;
     height: 40px;
+    margin-bottom: 25px;
 }
 
 @media only screen and (min-width: 750px) {

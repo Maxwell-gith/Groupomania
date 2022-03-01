@@ -12,7 +12,9 @@ exports.createComment = (req, res, next) => {
         content: req.body.content,
         idUser: req.body.idUser,
         idPost: req.body.idPost,
-        image: 'no image',
+        image: req.body.content && req.file
+          ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+          : null,
     })
         .then((comment) => {
             res.status(201).json({

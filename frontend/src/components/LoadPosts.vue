@@ -9,8 +9,8 @@
                     <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
                     <em>{{post.createdAt}}</em>
                 </figcaption>
-                <i type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i>
-                <i type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
+                <i v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i>
+                <i v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
             </figure>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
                 <input class="postCard__content__input styleInput" v-model="title">
@@ -66,6 +66,7 @@ export default {
         },
         deletePost(id) {
             let token = localStorage.getItem("token");
+            // alert("Voulez-vous vraiment supprimer ce post?");
             axios
                 .delete(
                     "http://localhost:3000/api/posts/" + id,{

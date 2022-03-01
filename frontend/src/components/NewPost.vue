@@ -2,7 +2,7 @@
     <div class="newPostCard">
         <form class="newPostCard__form" v-if="mode == 'addPost'">
             <input class="newPostCard__form__title styleInput" type="text" placeholder="Titre (facultatif)" v-model="title">
-            <input class="newPostCard__form__text styleInput" type="textarea" cols="60" row="20" placeholder="Votre texte" v-model="content">
+            <input class="newPostCard__form__text styleInput" type="textarea" cols="60" row="120" placeholder="Votre texte" v-model="content">
             <button class="newPostCard__form__actionButton primaryButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>

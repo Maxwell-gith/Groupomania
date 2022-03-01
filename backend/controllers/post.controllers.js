@@ -11,8 +11,10 @@ exports.createPost = (req, res, next) => {
     models.Post.create({
         title: req.body.title,
         content: req.body.content,
-        image: req.body.image,
         idUser: req.body.iduser,
+        image: req.body.content && req.file
+        ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+        : null,
     })
     .then((post) => {
         res.status(201).json({

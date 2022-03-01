@@ -1,7 +1,5 @@
 <template>
 <div>
-    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
-    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
     <form class="sendComment">
         <div class="sendComment__image">
             <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
@@ -9,6 +7,8 @@
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
+    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
+    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
     <div v-if="mode == 'comment'">
         <div class="commentContainer" v-for="comment in allComments" :key="comment.id">
             <div class="comment">
@@ -20,14 +20,14 @@
                         <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
                         <em>{{ comment.createdAt }}</em>
                     </figcaption>
-                    <i type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" class="fas fa-pen"></i>
-                    <i type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i>
+                    <i v-if="userId == comment.idUser" type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" class="fas fa-pen"></i>
+                    <i v-if="isAdmin === true || userId == comment.idUser" type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i>
                 </figure>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
                     <input class="comment__modify__input styleInput" v-model="content" />
                     <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
                 </div>
-                <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
+                <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click="UpdateId=-1">Annuler</button>
                 <p v-else class="comment__content">{{ comment.content }}</p>
             </div>
         </div>
@@ -52,6 +52,7 @@ export default {
     },
     props: {
         idPost: Number,
+        idUser: Number,
     },
     methods: {
         addComment() {
@@ -144,7 +145,7 @@ export default {
     .toCommentButton {
         height: 40px;
         width: 50%;
-        margin-top: 15px;
+        margin-bottom: 25px;
     }
     .sendComment {
         display: flex;
