@@ -1,17 +1,21 @@
 <template>
     <div class="postCardContainer">
         <div class="postCard" v-for="post in allPosts" :key="post.id">
-            <figure class="postCard__profileInfos">
-                <div class="postCard__profileInfos__image">
-                    <img src="../assets/profilepics.jpg" alt="">
+            <div class="postCard__profile">
+                <div class="postCard__profile__infos">
+                    <div class="postCard__profile__infos__image">
+                        <img src="../assets/profilepics.jpg" alt="">
+                    </div>
+                    <div class="postCard__profile__infos__text">
+                        <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
+                        <em>{{post.createdAt}}</em>
+                    </div>
                 </div>
-                <figcaption class="postCard__profileInfos__text">
-                    <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
-                    <em>{{post.createdAt}}</em>
-                </figcaption>
-                <i v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i>
-                <i v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="deletePost(post.id)" class="fas fa-trash-alt"></i>
-            </figure>
+                <div class="postCard__profile__tools">
+                    <span v-if="userId == post.idUser"><i type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i></span>
+                    <span v-if="isAdmin === true || userId == post.idUser"><i type="submit" @click.prevent="confirmDelete(post.id)" class="fas fa-trash-alt"></i></span>
+                </div>
+            </div>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
                 <input class="postCard__content__input styleInput" v-model="title">
                 <input class="postCard__content__input styleInput" v-model="content">
@@ -24,7 +28,7 @@
                 <strong class="postCard__content__title">{{ post.title }}</strong>
                 <p class="postCard__content__text" style="word-wrap: break-word;">{{ post.content }}</p>
             </div>
-            <NewComment :idPost="post.id" />
+            <NewComment :idPost="post.id" @adminOrNot="adminOrNot"/>
         </div>
 
     </div>
@@ -66,7 +70,6 @@ export default {
         },
         deletePost(id) {
             let token = localStorage.getItem("token");
-            // alert("Voulez-vous vraiment supprimer ce post?");
             axios
                 .delete(
                     "http://localhost:3000/api/posts/" + id,{
@@ -81,14 +84,18 @@ export default {
                     console.log(error); 
                 });
         },
-
-       async UpdatePost(idPost) {
+        confirmDelete(id) {
+            if (confirm("Voulez-vous vraiment supprimer ce post ?")) {
+                this.deletePost(id);
+            }
+        },
+        UpdatePost(idPost) {
             let token = localStorage.getItem("token");
             const data = {
                 title: this.title,
                 content: this.content,                
             }
-            await axios
+            axios
                 .put("http://localhost:3000/api/posts/" + idPost, data
                 , {
                     headers: { Authorization: "Bearer " + token },
@@ -107,10 +114,24 @@ export default {
 
         switchToUpdate(Id) {
             this.UpdateId = Id;
-        }
+        },
+        adminOrNot() {
+            let token = localStorage.getItem("token");
+            axios
+                .get("http://localhost:3000/api/profile/" + this.userId, {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    this.isAdmin = res.data.isAdmin;
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
     },
     mounted() {
         this.load();
+        this.adminOrNot();
     },
 }
 </script>
@@ -129,39 +150,66 @@ div{
     width: 90%;
     border-radius: 10px;
     margin-bottom: 25px;
-    &__profileInfos{
+    &__profile{
         display: flex;
+        flex-direction: row;
         width: 100%;
-        justify-content: space-between;
         margin-bottom: 15px;
         padding : 15px;
         border-bottom: $secondaryColor 2px solid;
         border-radius: 10px;
-        &__image{
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: $primaryColor 3px solid;
-            overflow: hidden;
-            img{
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-        &__text{
-            width: 80%;
+        &__infos{
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            em{
-                font-size: 11px;
+            flex-direction: row;
+            width: 70%;
+            &__image{
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                border: $primaryColor 3px solid;
+                overflow: hidden;
+                margin-right: 15px;
+                img{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+            &__text{
+                width: 50%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: flex-start;
+                em{
+                    font-size: 11px;
+                }
             }
         }
-        i{
-          font-size: 15px;
-          color: $tertiaryColor;
-          cursor: pointer;
+        &__tools{
+            display: flex;
+            flex-direction: row;
+            width: 39%;
+            justify-content: flex-end;
+            align-items: center;
+            span{
+                width: 30px;
+                height: 30px;
+                background-color: $tertiaryColor;
+                margin-left: 15px;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                i{
+                    font-size: 11px;
+                    color: $bodyColor;
+                }
+            }
+            span:hover {
+                background-color: $primaryColor;
+            }
         }
     }
     &__content{

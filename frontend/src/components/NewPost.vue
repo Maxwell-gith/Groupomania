@@ -2,7 +2,8 @@
     <div class="newPostCard">
         <form class="newPostCard__form" v-if="mode == 'addPost'">
             <input class="newPostCard__form__title styleInput" type="text" placeholder="Titre (facultatif)" v-model="title">
-            <input class="newPostCard__form__text styleInput" type="textarea" cols="60" row="120" placeholder="Votre texte" v-model="content">
+            <textarea class="newPostCard__form__text styleInput" type="textarea" placeholder="Votre texte" v-model="content"></textarea>
+            <input class= "newPostCard__form__addFile styleInput" id="fileInput" type="file" @change="addImg()" ref="file" />
             <button class="newPostCard__form__actionButton primaryButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
@@ -25,6 +26,8 @@ export default {
             mode: 'normalView',
             title: '',
             content: '',
+            file: null,
+            errorAlert: "",
         }
     },
 
@@ -41,30 +44,39 @@ export default {
             this.title = "";
             this.content = "";
         },
-        async AddPost() {
-            let token = localStorage.getItem("token");
-            let userId = localStorage.getItem("id");
-            const data = {
-                title: this.title,
-                content: this.content,
-                iduser: userId,
-                image: 'no image',
-            }
-            await axios
-                .post("http://localhost:3000/api/posts/", data
-                , {
-                    headers: { Authorization: "Bearer " + token },
-                })
-                .then((res) => {
-                    console.log(res);
-                    this.$emit("loadPosts");
-                    this.title = "";
-                    this.content = "";
-                    this.SwitchToNormalView();
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+        addImg() {
+            this.file = this.$refs.file.files[0];
+        },
+        AddPost() {          
+          let token = localStorage.getItem("token");
+          let userId = localStorage.getItem("id");
+          let data = new FormData();
+          if (this.file !== null && document.getElementById("fileInput").value !='') {
+            data.append("title", this.title);
+            data.append("content", this.content);
+            data.append("iduser", userId);
+            data.append("image", this.file, this.file.name);
+          } else {             
+            data.append("title", this.title);
+            data.append("content", this.content);
+            data.append("iduser", userId);
+          }
+          axios
+            .post("http://localhost:3000/api/posts/", data, {
+              headers: { Authorization: "Bearer " + token },
+            })
+            .then((res) => {
+              document.getElementById("fileInput").value='';          
+              console.log(res);
+              this.$emit("loadPosts");
+              this.title = "";
+              this.content = "";
+              this.SwitchToNormalView();   
+            })
+            .catch((error) => {
+              console.log(error);
+              alert(this.errorAlert = error.response.data.error);
+            });
         },
     },
 }
@@ -97,10 +109,18 @@ export default {
             height: 80px;
             margin-bottom: 25px;
         }
+        &__addFile{
+            width: 50%;
+            height: 40px;
+            margin-bottom: 25px;
+        }
         &__actionButton{
             width: 50%;
             height: 40px;
             margin-bottom: 25px;
+            i{
+                margin-left: 10px;
+            }
         }
     }
     &__toAddPost{

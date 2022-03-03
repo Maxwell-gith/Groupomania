@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 exports.getOneProfile = (req, res, next) => {
   models.User.findOne({ 
     where: { id: req.params.id }, 
-    attributes: ["id", "email", "name", "firstname"],})
+    attributes: ["id", "email", "name", "firstname", "isAdmin"],})
     .then((user) => {
       res.status(200).json(user);
       console.log(user);

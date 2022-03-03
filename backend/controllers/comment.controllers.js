@@ -3,18 +3,18 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
 exports.createComment = (req, res, next) => {
-    if (req.body.content === "") {
+    if (!req.body.content) {
         return res.status(400).json({
         error: "Contenu vide",
         });
     }
     models.Comment.create({
         content: req.body.content,
-        idUser: req.body.idUser,
+        idUser: req.body.iduser,
         idPost: req.body.idPost,
         image: req.body.content && req.file
           ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-          : null,
+          : 'no image',
     })
         .then((comment) => {
             res.status(201).json({
@@ -22,7 +22,7 @@ exports.createComment = (req, res, next) => {
                 comment: comment,
             });
         })
-        .catch((error) => res.status(400).json({ error }));
+        .catch((error) => res.status(400).json({ error: "Une erreur est survenue!" }));
 }
 
 exports.getAllComments = (req, res, next) => {

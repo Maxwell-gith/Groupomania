@@ -6,7 +6,7 @@ exports.createPost = (req, res, next) => {
     if (!req.body.title || !req.body.content) {
         return res.status(400).json({
             error: "Titre ou contenu vide",
-        });
+          });
     }
     models.Post.create({
         title: req.body.title,
@@ -14,7 +14,7 @@ exports.createPost = (req, res, next) => {
         idUser: req.body.iduser,
         image: req.body.content && req.file
         ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-        : null,
+        : 'no image',
     })
     .then((post) => {
         res.status(201).json({
@@ -22,7 +22,7 @@ exports.createPost = (req, res, next) => {
             post: post,
         });
     })
-    .catch((error) => res.status(400).json({ error }));
+    .catch((error) => res.status(400).json({ error: "Une erreur est survenue!" }));
 };
 
 exports.getAllPosts = (req, res, next) => {

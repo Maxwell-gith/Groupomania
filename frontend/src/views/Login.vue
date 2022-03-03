@@ -10,7 +10,8 @@
             <input class="styleInput" type="text" v-if="mode == 'createAccount'" v-model="name" placeholder="Nom">
             <input class="styleInput" type="text" v-if="mode == 'createAccount'" v-model="firstname" placeholder="Prénom">
             <input class="styleInput" type="email" v-model="email" placeholder="Email">
-            <input class="styleInput" type="password" v-model="password" placeholder="Mot de passe">
+            <input class="styleInput" type="password" v-model="password" placeholder="Mot de passe"> <br>
+            <em v-if="mode == 'createAccount'">Minimum: 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère (!.@#$%^*)</em>
             <input class="styleInput" type="password" v-if="mode == 'createAccount'" v-model="confirmPassword" placeholder="Confirmation Mot de passe">
             <button class="primaryButton" type="submit" v-if="mode == 'login'" @click.prevent="buttonLogin()">Se connecter</button>
             <button class="primaryButton" type="submit" v-else @click.prevent="buttonCreateAccount()">S'inscrire</button>
@@ -33,6 +34,7 @@ export default {
             password: "",
             confirmPassword: "",
             mode: 'login',
+            errorAlert: "",
         }
  
     },
@@ -73,6 +75,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                    alert(this.errorAlert = error.response.data.error);
                 })
         },
         switchToCreateAccount() {
@@ -122,6 +125,13 @@ export default {
 input{
     width: 80%;
     height: 40px;
+    margin-bottom: 25px;
+}
+
+em{
+    display: block;
+    font-size: 12px;
+    color: #808080;
     margin-bottom: 25px;
 }
 
