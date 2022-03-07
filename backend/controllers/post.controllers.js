@@ -3,9 +3,9 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
 exports.createPost = (req, res, next) => {
-    if (!req.body.title || !req.body.content) {
+    if (!req.body.content) {
         return res.status(400).json({
-            error: "Titre ou contenu vide",
+            error: "Contenu vide",
           });
     }
     models.Post.create({

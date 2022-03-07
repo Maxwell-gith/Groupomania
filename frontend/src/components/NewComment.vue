@@ -6,7 +6,8 @@
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
-        <input class= "sendComment__addFile styleInput" id="fileInputComment" type="file" @change="addImg()" ref="file" />
+        <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
+        <input class= "sendComment__addFileInput" id="fileInputComment" type="file" @change="addImg()" ref="file" />
     </form>
     <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
     <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
@@ -194,6 +195,7 @@ export default {
             border-radius: 50%;
             border: $primaryColor 3px solid;
             overflow: hidden;
+            margin-right: 10px;
             img{
                 width: 100%;
                 height: 100%;
@@ -201,7 +203,7 @@ export default {
             }
         }
         &__input {
-            width: 80%;
+            width: 70%;
             height: 40px;
         }
         &__button {
@@ -210,6 +212,7 @@ export default {
             border-radius: 50%;
             border: none;
             padding: 5px;
+            margin-left: 10px;
             @include shadow;
             background-color: $tertiaryColor;
             color: $bodyColor;
@@ -223,6 +226,9 @@ export default {
             &__icon {
                 color: $bodyColor;
             }
+        }
+        &__addFileInput {
+            display: none;
         }
     }
 div{
@@ -244,7 +250,6 @@ div{
     background-color: $bodyColor;
     &__profile {
         display: flex;
-
         width: 100%;
         margin-bottom: 15px;
         padding: 15px;

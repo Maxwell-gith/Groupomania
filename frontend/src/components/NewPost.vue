@@ -3,7 +3,8 @@
         <form class="newPostCard__form" v-if="mode == 'addPost'">
             <input class="newPostCard__form__title styleInput" type="text" placeholder="Titre (facultatif)" v-model="title">
             <textarea class="newPostCard__form__text styleInput" type="textarea" placeholder="Votre texte" v-model="content"></textarea>
-            <input class= "newPostCard__form__addFile styleInput" id="fileInput" type="file" @change="addImg()" ref="file" />
+            <label for="fileInput" class="newPostCard__form__actionButton primaryButton">Ajouter une image</label>
+            <input class= "newPostCard__form__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
             <button class="newPostCard__form__actionButton primaryButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
@@ -110,14 +111,16 @@ export default {
             margin-bottom: 25px;
         }
         &__addFile{
-            width: 50%;
-            height: 40px;
-            margin-bottom: 25px;
+            display: none;
         }
         &__actionButton{
             width: 50%;
             height: 40px;
             margin-bottom: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
             i{
                 margin-left: 10px;
             }
@@ -133,6 +136,7 @@ export default {
             border-radius: 50%;
             border: $primaryColor 3px solid;
             overflow: hidden;
+            margin-right: 15px;
             img{
                 width: 100%;
                 height: 100%;
@@ -140,7 +144,7 @@ export default {
             }
         }
         &__btnAddPost{
-            width: 90%;
+            width: 85%;
             height: 40px;
             border-radius: 5px;
             border: none;

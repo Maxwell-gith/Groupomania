@@ -6,6 +6,8 @@
                 <img src="../assets/profilepics.jpg" alt="">
             </div>
             <ul class="sectionProfile__card__content">
+                <label v-if="mode == 'update'" for="fileInput" class="sectionProfile__card__content__actionButton primaryButton">Ajouter une image</label>
+                <input v-if="mode == 'update'" class= "sectionProfile__card__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
                 <input type="text" v-if="mode == 'update'" v-model="name" placeholder="Nom"> 
                 <li class="sectionProfile__card__content__data" v-else>Nom : {{ dataUser.name }}</li>
                 <input type="text" v-if="mode == 'update'" v-model="firstname" placeholder="Prénom">
@@ -13,9 +15,9 @@
                 <input type="email" v-if="mode == 'update'" v-model="email" placeholder="Email"> 
                 <li class="sectionProfile__card__content__data" v-else>Email : {{ dataUser.email }}</li> 
             </ul>
-            <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
-            <button class="sectionProfile__card__button" v-if="mode == 'update'" @click="switchToRead()">Annuler</button>
-            <button class="sectionProfile__card__button" v-else @click="switchToUpdate()">Modifier</button>
+            <button class="sectionProfile__card__button primaryButton" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
+            <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead()">Annuler</button>
+            <button class="sectionProfile__card__button primaryButton" v-else @click="switchToUpdate()">Modifier</button>
         </div>
     </section>
 </template>
@@ -37,6 +39,7 @@ export default {
             firstname:"",
             email:"",
             mode: 'read',
+            file: "",
         };
     },
     methods: {
@@ -55,6 +58,7 @@ export default {
                     console.log({ error });
                 });
         },
+        
         sendUpdate() {
             let token = localStorage.getItem("token");
             let userId = localStorage.getItem("id");
@@ -74,6 +78,9 @@ export default {
                 .catch((error) => {
                     console.log({ error });
                 });
+        },
+        addImg() {
+            this.file = this.$refs.file.files[0];
         },
         switchToUpdate() {
             this.mode = 'update';
@@ -125,21 +132,30 @@ export default {
             }
             &__content{
                 list-style: none;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
                 &__data{
                     margin-bottom: 15px;
+                }
+                &__actionButton{
+                    width: 50%;
+                    height: 40px;
+                    margin-bottom: 25px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+                &__addFile{
+                    display: none;
                 }
             }
             &__button{
                 width: 50%;
                 height: 40px;
-                padding: 5px;
-                background-color: $tertiaryColor;
-                border-radius: 10px;
-                color: white;
-                @include shadow;
-                text-decoration: none;
-                border: none;
-                margin: 15px 15px 15px 15px;
+                margin-bottom: 25px;
             }
         }
     }
