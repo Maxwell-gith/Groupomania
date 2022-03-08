@@ -75,7 +75,6 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
-                    alert(this.errorAlert = error.response.data.error);
                 })
         },
         switchToCreateAccount() {

@@ -28,13 +28,27 @@ exports.modifyProfile = (req, res, next) => {
       .status(400)
       .json({ error: "Merci de remplir tous les champs !" });
   }
-
   models.User.findOne({
     where: { id: req.params.id },
-  }).then((user) => {
+  })
+  .then((user) => {
     if (user.id === userId || isAdmin === true) {
-      user
-        .update({
+      if (req.file){
+        user.update({
+          name: req.body.name,
+          firstname: req.body.firstname,
+          image: req.file
+          ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+          : user.image,
+        })
+        .then(() => {
+          res.status(200).json({ message: "Profil modifié !" });
+        })
+        .catch((error) => {
+          res.status(400).json({ error: "Impossible de mettre à jour ce Profil !" });
+        });
+      }else{
+      user.update({
           name: req.body.name,
           firstname: req.body.firstname,
           email: req.body.email,
@@ -46,7 +60,7 @@ exports.modifyProfile = (req, res, next) => {
             .json({ error: "Impossible de mettre à jour votre profil !" })
         );
     }
-  });
+  }});
 };
 
 exports.deleteProfile = (req, res, next) => {

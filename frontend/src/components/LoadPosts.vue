@@ -19,6 +19,8 @@
             <div v-if="UpdateId == post.id" class="postCard__content">                                
                 <input class="postCard__content__input styleInput" v-model="title">
                 <input class="postCard__content__input styleInput" v-model="content">
+                    <label for="fileInput" class="postCard__content__button primaryButton">Ajouter une image</label>
+                    <input class= "postCard__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
                 <div class="postCard__content__buttonContainer">
                     <button class="postCard__content__buttonContainer__button primaryButton" @click.prevent="UpdatePost(post.id)">Modifier</button>
                     <button class="postCard__content__buttonContainer__button secondaryButton" @click="UpdateId=-1">Annuler</button>                     
@@ -27,6 +29,9 @@
             <div v-else class="postCard__content">
                 <strong class="postCard__content__title">{{ post.title }}</strong>
                 <p class="postCard__content__text" style="word-wrap: break-word;">{{ post.content }}</p>
+                <div class="postCard__content__image">
+                    <img :src="post.image" alt="">
+                </div>
             </div>
             <NewComment :idPost="post.id" @adminOrNot="adminOrNot"/>
         </div>
@@ -50,6 +55,7 @@ export default {
             idUsers: "",
             title: "",
             content: "",
+            image: "",
             createdAt: "",
             UpdateId:-1,
         };
@@ -111,7 +117,6 @@ export default {
                     console.log(error);
                 })
         },
-
         switchToUpdate(Id) {
             this.UpdateId = Id;
         },
@@ -227,6 +232,16 @@ div{
             width: 100%;
             text-align: justify;
             word-wrap: break-word;
+        }
+        &__image{
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            img{
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
         }
         &__input{
             width: 100%;

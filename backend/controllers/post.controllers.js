@@ -68,15 +68,33 @@ exports.getAllPosts = (req, res, next) => {
       where: { id: req.params.id  },
     })
     .then((post) => { 
-      if (post.idUser === userId) {        
-        post.update({
+      if (post.idUser === userId) {
+        if (req.file){
+          post.update({
+            title: req.body.title,
+            content: req.body.content,
+            image: req.file
+            ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+            : post.image,
+          })
+          .then(() => {
+            res.status(200).json({ message: "Post modifié !" });
+          })
+          .catch((error) => {
+            res.status(400).json({ error: "Impossible de mettre à jour ce Post !" });
+          });
+        }else{
+          post.update({
             title: req.body.title,
             content: req.body.content          
-        })  
-          .then(() => res.status(200).json({ message: "Message modifié !" }))
-          .catch((error) =>
-            res.status(400).json({ error: "Impossible de mettre à jour ce Message !" })
-          );
+          })  
+          .then(() => {
+            res.status(200).json({ message: "Post modifié !" });
+          })
+          .catch((error) => {
+            res.status(400).json({ error: "Impossible de mettre à jour ce Post !" });
+          })
+        }        
     }});
   };
 

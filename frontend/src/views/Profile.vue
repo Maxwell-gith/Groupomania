@@ -3,7 +3,7 @@
         <div class="sectionProfile__card">
             <h1 class="sectionProfile__card__title">Mon profil</h1>
             <div class="sectionProfile__card__image">
-                <img src="../assets/profilepics.jpg" alt="">
+                <img src={dataUser.image} alt="Photo de profil">
             </div>
             <ul class="sectionProfile__card__content">
                 <label v-if="mode == 'update'" for="fileInput" class="sectionProfile__card__content__actionButton primaryButton">Ajouter une image</label>
@@ -62,15 +62,24 @@ export default {
         sendUpdate() {
             let token = localStorage.getItem("token");
             let userId = localStorage.getItem("id");
+            let data = new FormData();
+            if (this.file !== null && document.getElementById("fileInput").value !='') {
+                data.append("name", this.name);
+                data.append("firstname", this.firstname);
+                data.append("email", this.email);
+                data.append("image", this.file, this.file.name);
+            } else {             
+                data.append("name", this.name);
+                data.append("firstname", this.firstname);
+                data.append("email", this.email);
+            }
             axios
-                .put("http://localhost:3000/api/profile/" + userId, {
-                    name: this.name,
-                    firstname: this.firstname,
-                    email: this.email,
-                }, {
+                .put("http://localhost:3000/api/profile/" + userId, data
+                , {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
+                    document.getElementById("fileInput").value='';
                     console.log(res);
                     this.getData();
                     this.switchToRead();
