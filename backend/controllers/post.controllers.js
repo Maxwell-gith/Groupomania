@@ -86,7 +86,8 @@ exports.getAllPosts = (req, res, next) => {
         }else{
           post.update({
             title: req.body.title,
-            content: req.body.content          
+            content: req.body.content,
+            image: req.body.image,         
           })  
           .then(() => {
             res.status(200).json({ message: "Post modifié !" });

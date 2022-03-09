@@ -31,10 +31,19 @@
                 </div>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
                     <input class="comment__modify__input styleInput" v-model="content" />
-                    <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
+                    <div v-if="!this.file" class="postCard__content__image">
+                        <img :src="comment.image" alt="">
+                    </div>
+                    <div v-else class="postCard__content__image">
+                        <img :src="file" alt="">
+                    </div>
+                    <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="updateComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
                 </div>
                 <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click="UpdateId=-1">Annuler</button>
                 <p v-else class="comment__content">{{ comment.content }}</p>
+                <div class="comment__content__image">
+                    <img :src="comment.image" alt="">
+                </div>
             </div>
         </div>
     </div>    
@@ -61,14 +70,15 @@ export default {
     props: {
         idPost: Number,
         iduser: Number,
+        image: String,
     },
     methods: {
         addComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
             if (this.file !== null && document.getElementById("fileInputComment").value !='') {
-                data.append('image', this.file, this.file.name);
                 data.append('content', this.content);
+                data.append('image', this.file, this.file.name);
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
             }
@@ -78,8 +88,7 @@ export default {
                 data.append('iduser', this.userId);
             }
             axios
-                .post("http://localhost:3000/api/comments/", data
-                , {
+                .post("http://localhost:3000/api/comments/", data, {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
@@ -144,6 +153,9 @@ export default {
                     console.log(error);
                     alert(this.errorAlert = error.response.data.error);
                 })
+        },
+        addImg() {
+            this.file = this.$refs.file.files[0];
         },
         SwitchToComment() {
             this.mode = 'comment';
@@ -346,6 +358,16 @@ div{
         padding: 15px;
         text-align: justify;
         word-wrap: break-word;
+        &__image{
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            img{
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+        }
     }
 
 }

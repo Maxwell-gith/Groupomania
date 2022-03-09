@@ -19,8 +19,14 @@
             <div v-if="UpdateId == post.id" class="postCard__content">                                
                 <input class="postCard__content__input styleInput" v-model="title">
                 <input class="postCard__content__input styleInput" v-model="content">
-                    <label for="fileInput" class="postCard__content__button primaryButton">Ajouter une image</label>
-                    <input class= "postCard__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
+                <div v-if="!this.file" class="postCard__content__image">
+                    <img :src="post.image" alt="">
+                </div>
+                <div v-else class="postCard__content__image">
+                    <img :src="file" alt="">
+                </div>
+                <label for="fileInput" class="postCard__content__button primaryButton">Ajouter une image</label>
+                <input class= "postCard__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
                 <div class="postCard__content__buttonContainer">
                     <button class="postCard__content__buttonContainer__button primaryButton" @click.prevent="UpdatePost(post.id)">Modifier</button>
                     <button class="postCard__content__buttonContainer__button secondaryButton" @click="UpdateId=-1">Annuler</button>                     
@@ -58,6 +64,7 @@ export default {
             image: "",
             createdAt: "",
             UpdateId:-1,
+            file: null,
         };
     },
     methods: {
@@ -97,16 +104,23 @@ export default {
         },
         UpdatePost(idPost) {
             let token = localStorage.getItem("token");
-            const data = {
-                title: this.title,
-                content: this.content,                
+            let data = new FormData();
+            if (this.file !== null && document.getElementById("fileInput").value !='') {
+                data.append("title", this.title);
+                data.append("content", this.content);
+                data.append("image", this.file, this.file.name);
+            } else {             
+                data.append("title", this.title);
+                data.append("content", this.content);
             }
+
             axios
                 .put("http://localhost:3000/api/posts/" + idPost, data
                 , {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
+                    document.getElementById("fileInput").value='';
                     console.log(res);
                     this.load();
                     this.title = "";
@@ -119,6 +133,9 @@ export default {
         },
         switchToUpdate(Id) {
             this.UpdateId = Id;
+        },
+        addImg() {
+            this.file = this.$refs.file.files[0];
         },
         adminOrNot() {
             let token = localStorage.getItem("token");
