@@ -55,6 +55,7 @@ export default {
                     })
                     .catch((error) => {
                         console.log(error);
+                        alert ("Une erreur est survenue!");
                     })
             } else {
                 alert("Les mots de passe ne correspondent pas");

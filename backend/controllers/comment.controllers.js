@@ -10,7 +10,7 @@ exports.createComment = (req, res, next) => {
     }
     models.Comment.create({
         content: req.body.content,
-        idUser: req.body.iduser,
+        iduser: req.body.iduser,
         idPost: req.body.idPost,
         image: req.body.content && req.file
           ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
@@ -32,6 +32,7 @@ exports.getAllComments = (req, res, next) => {
         "idUser",
         "idPost",
         "content",
+        "image",
         "createdAt",
         "updatedAt",
       ],

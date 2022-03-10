@@ -2,21 +2,24 @@
     <section class="sectionProfile">
         <div class="sectionProfile__card">
             <h1 class="sectionProfile__card__title">Mon profil</h1>
-            <div class="sectionProfile__card__image">
-                <img src={dataUser.image} alt="Photo de profil">
+            <div v-if="!this.file" class="sectionProfile__card__image">
+                <img :src="dataUser.image" alt="Photo de profil">
+            </div>
+            <div v-else class="sectionProfile__card__image">
+                <img src="../assets/profilepics.jpg" alt="Photo de profil">
             </div>
             <ul class="sectionProfile__card__content">
                 <label v-if="mode == 'update'" for="fileInput" class="sectionProfile__card__content__actionButton primaryButton">Ajouter une image</label>
                 <input v-if="mode == 'update'" class= "sectionProfile__card__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
-                <input type="text" v-if="mode == 'update'" v-model="name" placeholder="Nom"> 
+                <input type="text" v-if="mode == 'update'" v-model="dataUser.name" placeholder="Nom"> 
                 <li class="sectionProfile__card__content__data" v-else>Nom : {{ dataUser.name }}</li>
-                <input type="text" v-if="mode == 'update'" v-model="firstname" placeholder="Prénom">
+                <input type="text" v-if="mode == 'update'" v-model="dataUser.firstname" placeholder="Prénom">
                 <li class="sectionProfile__card__content__data" v-else>Prénom : {{ dataUser.firstname }}</li>
-                <input type="email" v-if="mode == 'update'" v-model="email" placeholder="Email"> 
+                <input type="email" v-if="mode == 'update'" v-model="dataUser.email" placeholder="Email"> 
                 <li class="sectionProfile__card__content__data" v-else>Email : {{ dataUser.email }}</li> 
             </ul>
             <button class="sectionProfile__card__button primaryButton" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
-            <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead()">Annuler</button>
+            <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead(), refresh()">Annuler</button>
             <button class="sectionProfile__card__button primaryButton" v-else @click="switchToUpdate()">Modifier</button>
         </div>
     </section>
@@ -35,11 +38,9 @@ export default {
             token: "",
             userId: "",
             dataUser: [],
-            name:"",
-            firstname:"",
-            email:"",
             mode: 'read',
             file: "",
+            inputImg: "",
         };
     },
     methods: {
@@ -64,14 +65,14 @@ export default {
             let userId = localStorage.getItem("id");
             let data = new FormData();
             if (this.file !== null && document.getElementById("fileInput").value !='') {
-                data.append("name", this.name);
-                data.append("firstname", this.firstname);
-                data.append("email", this.email);
+                data.append("name", this.dataUser.name);
+                data.append("firstname", this.dataUser.firstname);
+                data.append("email", this.dataUser.email);
                 data.append("image", this.file, this.file.name);
             } else {             
-                data.append("name", this.name);
-                data.append("firstname", this.firstname);
-                data.append("email", this.email);
+                data.append("name", this.dataUser.name);
+                data.append("firstname", this.dataUser.firstname);
+                data.append("email", this.dataUser.email);
             }
             axios
                 .put("http://localhost:3000/api/profile/" + userId, data
@@ -87,6 +88,11 @@ export default {
                 .catch((error) => {
                     console.log({ error });
                 });
+        },
+        refresh() {
+            this.getData();
+            document.getElementById("fileInput").value='';
+            this.file = null;
         },
         addImg() {
             this.file = this.$refs.file.files[0];

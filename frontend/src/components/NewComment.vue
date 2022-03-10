@@ -31,17 +31,17 @@
                 </div>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
                     <input class="comment__modify__input styleInput" v-model="content" />
-                    <div v-if="!this.file" class="postCard__content__image">
+                    <div class="postCard__content__image">
                         <img :src="comment.image" alt="">
                     </div>
-                    <div v-else class="postCard__content__image">
+                    <!-- <div v-else class="postCard__content__image">
                         <img :src="file" alt="">
-                    </div>
+                    </div> -->
                     <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="updateComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
                 </div>
                 <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click="UpdateId=-1">Annuler</button>
                 <p v-else class="comment__content">{{ comment.content }}</p>
-                <div class="comment__content__image">
+                <div v-if="comment.image != 'no image'" class="comment__content__image">
                     <img :src="comment.image" alt="">
                 </div>
             </div>
@@ -92,7 +92,7 @@ export default {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
-                    document.getElementById("fileInput").value='';
+                    document.getElementById("fileInputComment").value='';
                     console.log(res);
                     this.loadComments();
                     this.SwitchToComment();

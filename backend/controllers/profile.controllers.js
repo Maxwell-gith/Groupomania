@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 exports.getOneProfile = (req, res, next) => {
   models.User.findOne({ 
     where: { id: req.params.id }, 
-    attributes: ["id", "email", "name", "firstname", "isAdmin"],})
+    attributes: ["id", "email", "name", "firstname", "image", "isAdmin"],})
     .then((user) => {
       res.status(200).json(user);
       console.log(user);
@@ -23,7 +23,7 @@ exports.modifyProfile = (req, res, next) => {
   const userId = decodedToken.userId;
   const isAdmin = decodedToken.isAdmin;
 
-  if (req.body.name == "" || req.body.firstname == "") {
+  if (req.body.name == "" && req.body.firstname == "") {
     return res
       .status(400)
       .json({ error: "Merci de remplir tous les champs !" });
@@ -37,6 +37,7 @@ exports.modifyProfile = (req, res, next) => {
         user.update({
           name: req.body.name,
           firstname: req.body.firstname,
+          email: req.body.email,
           image: req.file
           ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
           : user.image,
