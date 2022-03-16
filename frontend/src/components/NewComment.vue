@@ -2,12 +2,11 @@
 <div>
     <form class="sendComment">
         <div class="sendComment__image">
-            <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
+            <img class="comment__view__card__img" :src="dataUser.image" alt="" />
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
+        <label class="sendComment__button" for="fileInput" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
-        <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
-        <input class= "sendComment__addFileInput" id="fileInputComment" type="file" @change="addImg()" ref="file" />
     </form>
     <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
     <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
@@ -17,7 +16,7 @@
                 <div class="comment__profile">
                     <div class="comment__profile__infos">
                         <div class="comment__profile__infos__image">
-                            <img src="../assets/profilepics.jpg" alt="" />
+                            <img :src="dataUser.image" alt="" />
                         </div>
                         <div class="comment__profile__infos__text">
                             <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
@@ -31,15 +30,19 @@
                 </div>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
                     <input class="comment__modify__input styleInput" v-model="content" />
-                    <div class="postCard__content__image">
+                    <div v-if="file == null" class="comment__modify__image">
                         <img :src="comment.image" alt="">
+                        <label for="fileInput" class="primaryButton">Ajouter une image</label>
                     </div>
-                    <!-- <div v-else class="postCard__content__image">
+                    <div v-else class="comment__modify__image">
                         <img :src="file" alt="">
-                    </div> -->
-                    <div v-if="UpdateId == comment.id" class="comment__modify__button" @click.prevent="updateComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
+                        <label for="fileInput" class="primaryButton">Ajouter une image</label>
+                    </div>
                 </div>
-                <button v-if="UpdateId == comment.id" class="stopModifyButton secondaryButton" @click="UpdateId=-1">Annuler</button>
+                <div v-if="UpdateId == comment.id" class="comment__modify__buttonContainer">
+                    <button v-if="UpdateId == comment.id" class="primaryButton" @click.prevent="updateComment()">Modifier</button>
+                    <button v-if="UpdateId == comment.id" class="secondaryButton"  @click="UpdateId=-1">Annuler</button>
+                </div>
                 <p v-else class="comment__content">{{ comment.content }}</p>
                 <div v-if="comment.image != 'no image'" class="comment__content__image">
                     <img :src="comment.image" alt="">
@@ -64,7 +67,8 @@ export default {
             userId: localStorage.getItem("id"),
             isAdmin: "",
             errorAlert: "",
-            file: null,
+            file: "",
+            dataUser: [],
         }
     },
     props: {
@@ -73,12 +77,27 @@ export default {
         image: String,
     },
     methods: {
+        getDataUser() {
+            let token = localStorage.getItem("token");
+            let userId = localStorage.getItem("id");
+            axios
+                .get("http://localhost:3000/api/profile/" + userId, {
+                    headers: { Authorization: "Bearer " + token},
+                })
+                .then((res) => {
+                    this.dataUser = res.data;
+                })
+                .catch((error) => {
+                    console.log({ error });
+                });
+        },
         addComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
-            if (this.file !== null && document.getElementById("fileInputComment").value !='') {
+            if (this.file !== null && document.getElementById("fileInput").value !='') {
                 data.append('content', this.content);
                 data.append('image', this.file, this.file.name);
+                console.log(this.file)
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
             }
@@ -88,12 +107,11 @@ export default {
                 data.append('iduser', this.userId);
             }
             axios
-                .post("http://localhost:3000/api/comments/", data, {
+                .post("http://localhost:3000/api/comments/" , data, {
                     headers: { Authorization: "Bearer " + token },
                 })
-                .then((res) => {
-                    document.getElementById("fileInputComment").value='';
-                    console.log(res);
+                .then(() => {
+                    document.getElementById("fileInput").value='';
                     this.loadComments();
                     this.SwitchToComment();
                     this.content = "";
@@ -135,8 +153,17 @@ export default {
         },
         updateComment(idComment) {
             let token = localStorage.getItem("token");
-            const data = {
-                content: this.content,
+            let data = new FormData();
+            if (this.file !== null && document.getElementById("fileInput").value !='') {
+                data.append('content', this.content);
+                data.append('image', this.file, this.file.name);
+                data.append('idPost', this.idPost);
+                data.append('iduser', this.userId);
+            }
+            else {
+                data.append('content', this.content);
+                data.append('idPost', this.idPost);
+                data.append('iduser', this.userId);
             }
             axios
                 .put("http://localhost:3000/api/comments/" + idComment, data
@@ -154,9 +181,7 @@ export default {
                     alert(this.errorAlert = error.response.data.error);
                 })
         },
-        addImg() {
-            this.file = this.$refs.file.files[0];
-        },
+
         SwitchToComment() {
             this.mode = 'comment';
         },
@@ -320,38 +345,42 @@ div{
 
     }
     &__modify{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        width: 100%;
         padding: 15px;
         &__input{
-            width: 80%;
+            width: 100%;
             height: 40px;
         }
-        &__button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: none;
-            padding: 5px;
-            @include shadow;
-            background-color: $tertiaryColor;
-            color: $bodyColor;
+        &__image{
+            width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+            img{
+                width: 100%;
+                height: auto;
+                object-fit: cover;
+            }
+            label{
+                width: 40%;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 15px;
+                margin: auto;
+            }
+
+        }
+        &__buttonContainer{
+            width: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            &:focus {
-                outline: none;
-            }
-            &__icon {
-                color: $bodyColor;
-            }
+            justify-content: space-around;
+           button{
+                width: 40%;
+                height: 40px;
+                margin-bottom: 25px; 
+           }
         }
-    }
-    .stopModifyButton{
-        margin-bottom: 25px;
-        height: 40px;
-        width: 50%;
     }
     &__content {
         width: 100%;
@@ -367,6 +396,7 @@ div{
                 height: auto;
                 object-fit: cover;
             }
+
         }
     }
 

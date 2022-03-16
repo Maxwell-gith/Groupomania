@@ -11,7 +11,7 @@ const multer = require("../middleware/multer-config");
 router.get("/", auth, postCtrl.getAllPosts);
 router.post("/", auth, multer, postCtrl.createPost);
 router.delete("/:id", auth, postCtrl.deletePost);
-router.put("/:id", auth, multer, postCtrl.modifyPost);
+router.put("/:id", auth, multer, postCtrl.updatePost);
 
 
 module.exports = router;

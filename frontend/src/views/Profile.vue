@@ -19,7 +19,7 @@
                 <li class="sectionProfile__card__content__data" v-else>Email : {{ dataUser.email }}</li> 
             </ul>
             <button class="sectionProfile__card__button primaryButton" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
-            <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead(), refresh()">Annuler</button>
+            <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead(), getData()">Annuler</button>
             <button class="sectionProfile__card__button primaryButton" v-else @click="switchToUpdate()">Modifier</button>
         </div>
     </section>
@@ -40,7 +40,7 @@ export default {
             dataUser: [],
             mode: 'read',
             file: "",
-            inputImg: "",
+            errorAlert: "",
         };
     },
     methods: {
@@ -54,6 +54,8 @@ export default {
                 .then((res) => {
                     console.log(res);
                     this.dataUser = res.data;
+                    document.getElementById("fileInput").value='';
+                    this.file = null;
                 })
                 .catch((error) => {
                     console.log({ error });
@@ -80,19 +82,14 @@ export default {
                     headers: { Authorization: "Bearer " + token },
                 })
                 .then((res) => {
-                    document.getElementById("fileInput").value='';
                     console.log(res);
                     this.getData();
                     this.switchToRead();
                 })
                 .catch((error) => {
                     console.log({ error });
+                    alert(this.errorAlert = error.response.data.error);
                 });
-        },
-        refresh() {
-            this.getData();
-            document.getElementById("fileInput").value='';
-            this.file = null;
         },
         addImg() {
             this.file = this.$refs.file.files[0];

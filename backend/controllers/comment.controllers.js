@@ -10,7 +10,7 @@ exports.createComment = (req, res, next) => {
     }
     models.Comment.create({
         content: req.body.content,
-        iduser: req.body.iduser,
+        idUser: req.body.iduser,
         idPost: req.body.idPost,
         image: req.body.content && req.file
           ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
@@ -51,7 +51,7 @@ exports.getAllComments = (req, res, next) => {
       .catch((error) => res.status(400).json({ error }));
   };
   
-  exports.modifyComment = (req, res, next) => {
+  exports.updateComment = (req, res, next) => {
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
@@ -65,14 +65,31 @@ exports.getAllComments = (req, res, next) => {
       where: { id: req.params.id  },
     })
     .then((comment) => { 
-      if (comment.idUser === userId) {        
+      if (comment.idUser === userId) {
+        if (req.file) {        
         comment.update({
-            content: req.body.content          
+            content: req.body.content,
+            image: req.file
+            ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
+            : comment.image,
         })  
-          .then(() => res.status(200).json({ message: "Commentaire modifié !" }))
+          .then(() => {
+            res.status(200).json({ message: "Commentaire modifié !" });
+          })
           .catch((error) =>
             res.status(400).json({ error: "Impossible de mettre à jour ce commentaire !" })
           );
+        } else {
+          comment.update({
+            content: req.body.content,
+          })
+            .then(() => {
+              res.status(200).json({ message: "Commentaire modifié !" });
+            })
+            .catch((error) =>
+              res.status(400).json({ error: "Impossible de mettre à jour ce commentaire !" })
+            );
+        }
     }});
   };
 
@@ -96,7 +113,7 @@ exports.getAllComments = (req, res, next) => {
               });
         }})
       .catch((error) => {
-        res.status(400).json({ error: error });
+        res.status(400).json({ error: error, message: "Une erreur est survenue" });
       });
   };
 

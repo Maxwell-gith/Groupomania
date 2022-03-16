@@ -76,6 +76,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                    alert("Une erreur est survenue!");
                 })
         },
         switchToCreateAccount() {

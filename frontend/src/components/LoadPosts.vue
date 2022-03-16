@@ -1,10 +1,11 @@
 <template>
     <div class="postCardContainer">
+        <input v-show="false" id="fileInput" type="file" @change="addImg()" ref="file" />
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <div class="postCard__profile">
                 <div class="postCard__profile__infos">
                     <div class="postCard__profile__infos__image">
-                        <img src="../assets/profilepics.jpg" alt="">
+                        <img :src="dataUser.image" alt="Photo de profil">
                     </div>
                     <div class="postCard__profile__infos__text">
                         <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
@@ -18,18 +19,18 @@
             </div>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
                 <input class="postCard__content__input styleInput" v-model="title">
-                <input class="postCard__content__input styleInput" v-model="content">
-                <div v-if="!this.file" class="postCard__content__image">
+                <textarea class="postCard__content__inputText styleInput" v-model="content"></textarea>
+                <div v-if="file == null" class="postCard__content__image">
                     <img :src="post.image" alt="">
+                    <label for="fileInput" class="primaryButton">Ajouter une image</label>
                 </div>
                 <div v-else class="postCard__content__image">
                     <img :src="file" alt="">
+                    <label for="fileInput" class="primaryButton">Ajouter une image</label>
                 </div>
-                <label for="fileInput" class="postCard__content__button primaryButton">Ajouter une image</label>
-                <input class= "postCard__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
                 <div class="postCard__content__buttonContainer">
                     <button class="postCard__content__buttonContainer__button primaryButton" @click.prevent="UpdatePost(post.id)">Modifier</button>
-                    <button class="postCard__content__buttonContainer__button secondaryButton" @click="UpdateId=-1">Annuler</button>                     
+                    <button class="postCard__content__buttonContainer__button secondaryButton" @click="UpdateId=-1, load()">Annuler</button>                     
                 </div>                    
             </div>
             <div v-else class="postCard__content">
@@ -58,13 +59,14 @@ export default {
             userId: localStorage.getItem("id"),
             isAdmin: "",
             allPosts: [],
+            dataUser: [],
             idUsers: "",
             title: "",
             content: "",
-            image: "",
             createdAt: "",
             UpdateId:-1,
-            file: null,
+            file: "",
+            fileInput: document.getElementById("fileInput"),
         };
     },
     methods: {
@@ -76,6 +78,22 @@ export default {
                 })
                 .then((res) => {
                     this.allPosts = res.data;
+                    document.getElementById("fileInput").value='';
+                    this.file = null;
+                })
+                .catch((error) => {
+                    console.log({ error });
+                });
+        },
+        getDataUser() {
+            let token = localStorage.getItem("token");
+            let userId = localStorage.getItem("id");
+            axios
+                .get("http://localhost:3000/api/profile/" + userId, {
+                    headers: { Authorization: "Bearer " + token},
+                })
+                .then((res) => {
+                    this.dataUser = res.data;
                 })
                 .catch((error) => {
                     console.log({ error });
@@ -129,6 +147,7 @@ export default {
                 })
                 .catch((error) => {
                     console.log(error);
+                    alert(this.errorAlert = error.response.data.error);
                 })
         },
         switchToUpdate(Id) {
@@ -238,7 +257,7 @@ div{
         width: 100%;
         padding : 15px;
         align-items: flex-start;
-                border-bottom: $secondaryColor 2px solid;
+        border-bottom: $secondaryColor 2px solid;
         &__title{
             width: 100%;
             margin-bottom: 15px;
@@ -259,13 +278,28 @@ div{
                 height: auto;
                 object-fit: cover;
             }
+            label{
+                width: 40%;
+                height: 40px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 15px;
+            }
         }
         &__input{
             width: 100%;
             height: 40px;
             margin-bottom: 25px;
         }
+        &__inputText{
+            width: 100%;
+            height: 80px;
+            text-align: justify;
+            word-wrap: break-word;
+        }
         &__buttonContainer {
+            width: 100%;
             display: flex;
             justify-content: space-around;
             flex-direction: row;

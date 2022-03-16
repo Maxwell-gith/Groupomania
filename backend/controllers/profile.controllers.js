@@ -17,13 +17,13 @@ exports.getOneProfile = (req, res, next) => {
     })
 };
 
-exports.modifyProfile = (req, res, next) => {
+exports.updateProfile = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
   const userId = decodedToken.userId;
   const isAdmin = decodedToken.isAdmin;
 
-  if (req.body.name == "" && req.body.firstname == "") {
+  if (req.body.name == "" || req.body.firstname == "" || req.body.email == "") {
     return res
       .status(400)
       .json({ error: "Merci de remplir tous les champs !" });

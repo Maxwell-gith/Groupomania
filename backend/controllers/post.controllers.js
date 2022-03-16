@@ -54,15 +54,15 @@ exports.getAllPosts = (req, res, next) => {
       });
   };
 
-  exports.modifyPost = (req, res, next) => {  
+  exports.updatePost = (req, res, next) => {  
     const token = req.headers.authorization.split(" ")[1];
     const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
     const userId = decodedToken.userId;
 
     if (req.body.title == "" || req.body.content == "") {
-      return res
-        .status(400)
-        .json({ error: "Merci de remplir tous les champs !" });
+      return res.status(400).json({ 
+      error: "Merci de remplir tous les champs !" 
+    });
     }  
     models.Post.findOne({
       where: { id: req.params.id  },
@@ -112,14 +112,14 @@ exports.getAllPosts = (req, res, next) => {
         if (post.idUser === userId || isAdmin === true) {        
           post.destroy()
               .then(() => {
-                res.status(200).json({ message: "Message supprimé !" });
+                res.status(200).json({ message: "Post supprimé !" });
               })
               .catch((error) => {
-                res.status(400).json({ error: error, message: "Le message n'a pas pu être supprimé" });
+                res.status(400).json({ error: error, message: "Le Post n'a pas pu être supprimé" });
               });
         }})
       .catch((error) => {
-        res.status(400).json({ error: error });
+        res.status(400).json({ error: error, message: "Une erreur est survenue" });
       });
   };
 
