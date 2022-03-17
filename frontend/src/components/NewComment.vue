@@ -2,7 +2,7 @@
 <div>
     <form class="sendComment">
         <div class="sendComment__image">
-            <img class="comment__view__card__img" :src="dataUser.image" alt="" />
+            <img class="comment__view__card__img" :src="imageUser" alt="" />
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <label class="sendComment__button" for="fileInput" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
@@ -16,7 +16,7 @@
                 <div class="comment__profile">
                     <div class="comment__profile__infos">
                         <div class="comment__profile__infos__image">
-                            <img :src="dataUser.image" alt="" />
+                            <img :src="comment.User.image" alt="" />
                         </div>
                         <div class="comment__profile__infos__text">
                             <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
@@ -65,9 +65,9 @@ export default {
             allComments: [],
             UpdateId:-1,
             userId: localStorage.getItem("id"),
+            imageUser: localStorage.getItem("image"),
             isAdmin: "",
             errorAlert: "",
-            file: "",
             dataUser: [],
         }
     },
@@ -77,26 +77,12 @@ export default {
         image: String,
     },
     methods: {
-        getDataUser() {
-            let token = localStorage.getItem("token");
-            let userId = localStorage.getItem("id");
-            axios
-                .get("http://localhost:3000/api/profile/" + userId, {
-                    headers: { Authorization: "Bearer " + token},
-                })
-                .then((res) => {
-                    this.dataUser = res.data;
-                })
-                .catch((error) => {
-                    console.log({ error });
-                });
-        },
         addComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
-            if (this.file !== null && document.getElementById("fileInput").value !='') {
+            if (this.$parent.file !== null && document.getElementById("fileInput").value !='') {
                 data.append('content', this.content);
-                data.append('image', this.file, this.file.name);
+                data.append('image', this.$parent.file, this.$parent.file);
                 console.log(this.file)
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
@@ -151,12 +137,12 @@ export default {
                     alert(this.errorAlert = error.response.data.error);
                 });
         },
-        updateComment(idComment) {
+        updateComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
             if (this.file !== null && document.getElementById("fileInput").value !='') {
                 data.append('content', this.content);
-                data.append('image', this.file, this.file.name);
+                data.append('image', this.$parent.file, this.$parent.file);
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
             }
@@ -166,7 +152,7 @@ export default {
                 data.append('iduser', this.userId);
             }
             axios
-                .put("http://localhost:3000/api/comments/" + idComment, data
+                .put("http://localhost:3000/api/comments/" + this.UpdateId, data
                 , {
                     headers: { Authorization: "Bearer " + token },
                 })

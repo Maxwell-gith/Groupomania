@@ -70,6 +70,7 @@ export default {
                 .then((res) => {
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data.userId);
+                    localStorage.setItem("image", res.data.image);
                     console.log(res);
                     this.$root.logOn();
                     this.$router.push("/");

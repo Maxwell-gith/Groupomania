@@ -1,11 +1,12 @@
 <template>
     <div class="postCardContainer">
         <input v-show="false" id="fileInput" type="file" @change="addImg()" ref="file" />
+        <img :src="urlImage" alt="">
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <div class="postCard__profile">
                 <div class="postCard__profile__infos">
                     <div class="postCard__profile__infos__image">
-                        <img :src="dataUser.image" alt="Photo de profil">
+                        <img :src="post.User.image" alt="Photo de profil">
                     </div>
                     <div class="postCard__profile__infos__text">
                         <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
@@ -66,6 +67,7 @@ export default {
             createdAt: "",
             UpdateId:-1,
             file: "",
+            urlImage: "",
             fileInput: document.getElementById("fileInput"),
         };
     },
@@ -80,20 +82,6 @@ export default {
                     this.allPosts = res.data;
                     document.getElementById("fileInput").value='';
                     this.file = null;
-                })
-                .catch((error) => {
-                    console.log({ error });
-                });
-        },
-        getDataUser() {
-            let token = localStorage.getItem("token");
-            let userId = localStorage.getItem("id");
-            axios
-                .get("http://localhost:3000/api/profile/" + userId, {
-                    headers: { Authorization: "Bearer " + token},
-                })
-                .then((res) => {
-                    this.dataUser = res.data;
                 })
                 .catch((error) => {
                     console.log({ error });
@@ -155,6 +143,7 @@ export default {
         },
         addImg() {
             this.file = this.$refs.file.files[0];
+            this.urlImage = document.getElementById("fileInput").value;
         },
         adminOrNot() {
             let token = localStorage.getItem("token");

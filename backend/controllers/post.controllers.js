@@ -40,7 +40,7 @@ exports.getAllPosts = (req, res, next) => {
       include: [
         {
           model: models.User,
-          attributes: ["name", "firstname"],
+          attributes: ["name", "firstname", "image"],
         },
       ],
     })

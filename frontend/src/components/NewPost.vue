@@ -10,7 +10,8 @@
         </form>
         <div v-else class="newPostCard__toAddPost">
             <div class="newPostCard__toAddPost__image">
-                <img :src="dataUser.image" alt="Photo de profil">
+                <img :src="imageUser" alt="">
+                <!-- <img :src="dataUser.image" alt="Photo de profil"> -->
             </div>
             <button class="newPostCard__toAddPost__btnAddPost" @click.prevent="SwitchToAddPost()">Exprimez-vous!</button>
         </div>
@@ -30,6 +31,7 @@ export default {
             file: null,
             errorAlert: "",
             dataUser: [],
+            imageUser: localStorage.getItem("image"),
         }
     },
 
@@ -45,20 +47,6 @@ export default {
             this.$emit("loadPosts");
             this.title = "";
             this.content = "";
-        },
-        getDataUser() {
-            let token = localStorage.getItem("token");
-            let userId = localStorage.getItem("id");
-            axios
-                .get("http://localhost:3000/api/profile/" + userId, {
-                    headers: { Authorization: "Bearer " + token},
-                })
-                .then((res) => {
-                    this.dataUser = res.data;
-                })
-                .catch((error) => {
-                    console.log({ error });
-                });
         },
         addImg() {
             this.file = this.$refs.file.files[0];
