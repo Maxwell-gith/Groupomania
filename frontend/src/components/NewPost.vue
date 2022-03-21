@@ -9,9 +9,11 @@
             <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
         </form>
         <div v-else class="newPostCard__toAddPost">
-            <div class="newPostCard__toAddPost__image">
+            <div v-if="imageUser" class="newPostCard__toAddPost__image">
                 <img :src="imageUser" alt="">
-                <!-- <img :src="dataUser.image" alt="Photo de profil"> -->
+            </div>
+            <div v-else class="newPostCard__toAddPost__image">
+                <img src="../assets/profilepics.jpg" alt="">
             </div>
             <button class="newPostCard__toAddPost__btnAddPost" @click.prevent="SwitchToAddPost()">Exprimez-vous!</button>
         </div>

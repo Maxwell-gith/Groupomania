@@ -1,8 +1,11 @@
 <template>
 <div>
     <form class="sendComment">
-        <div class="sendComment__image">
+        <div v-if="imageUser" class="sendComment__image">
             <img class="comment__view__card__img" :src="imageUser" alt="" />
+        </div>
+        <div v-else class="sendComment__image">
+            <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <label class="sendComment__button" for="fileInput" title="Ajouter une image"><i class="fas fa-file-image"></i></label>

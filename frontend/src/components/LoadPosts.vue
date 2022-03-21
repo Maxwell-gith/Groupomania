@@ -1,12 +1,14 @@
 <template>
     <div class="postCardContainer">
         <input v-show="false" id="fileInput" type="file" @change="addImg()" ref="file" />
-        <img :src="urlImage" alt="">
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <div class="postCard__profile">
                 <div class="postCard__profile__infos">
-                    <div class="postCard__profile__infos__image">
+                    <div v-if="post.User.image" class="postCard__profile__infos__image">
                         <img :src="post.User.image" alt="Photo de profil">
+                    </div>
+                    <div v-else class="postCard__profile__infos__image">
+                        <img src="../assets/profilepics.jpg" alt="Photo de profil">
                     </div>
                     <div class="postCard__profile__infos__text">
                         <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
@@ -23,11 +25,10 @@
                 <textarea class="postCard__content__inputText styleInput" v-model="content"></textarea>
                 <div v-if="file == null" class="postCard__content__image">
                     <img :src="post.image" alt="">
-                    <label for="fileInput" class="primaryButton">Ajouter une image</label>
                 </div>
-                <div v-else class="postCard__content__image">
-                    <img :src="file" alt="">
+                <div class="postCard__content__button">
                     <label for="fileInput" class="primaryButton">Ajouter une image</label>
+                    <em v-if="urlImage">Votre nouvelle image: {{ this.urlImage }}</em>
                 </div>
                 <div class="postCard__content__buttonContainer">
                     <button class="postCard__content__buttonContainer__button primaryButton" @click.prevent="UpdatePost(post.id)">Modifier</button>
@@ -82,6 +83,7 @@ export default {
                     this.allPosts = res.data;
                     document.getElementById("fileInput").value='';
                     this.file = null;
+                    this.urlImage = "";
                 })
                 .catch((error) => {
                     console.log({ error });
@@ -131,6 +133,7 @@ export default {
                     this.load();
                     this.title = "";
                     this.content = "";
+                    this.urlImage = "";
                     this. UpdateId=-1;
                 })
                 .catch((error) => {
@@ -257,24 +260,35 @@ div{
             width: 100%;
             text-align: justify;
             word-wrap: break-word;
+            margin-bottom: 15px;
         }
         &__image{
-            width: 100%;
+            width: 90%;
             height: auto;
+            margin: auto;
             margin-bottom: 15px;
             img{
                 width: 100%;
                 height: auto;
                 object-fit: cover;
             }
+
+        }
+        &__button{
             label{
                 width: 40%;
                 height: 40px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-top: 15px;
+                margin-bottom: 10px;
             }
+            em{
+                color: $tertiaryColor;
+                font-size: 11px;
+                font-weight: 700;
+                margin-bottom: 15px;
+                }
         }
         &__input{
             width: 100%;

@@ -2,7 +2,7 @@
     <section class="sectionProfile">
         <div class="sectionProfile__card">
             <h1 class="sectionProfile__card__title">Mon profil</h1>
-            <div v-if="!this.file" class="sectionProfile__card__image">
+            <div v-if="dataUser.image" class="sectionProfile__card__image">
                 <img :src="dataUser.image" alt="Photo de profil">
             </div>
             <div v-else class="sectionProfile__card__image">
@@ -10,6 +10,7 @@
             </div>
             <ul class="sectionProfile__card__content">
                 <label v-if="mode == 'update'" for="fileInput" class="sectionProfile__card__content__actionButton primaryButton">Ajouter une image</label>
+                <em v-if="urlImage">Votre nouvelle image: {{ this.urlImage }}</em>
                 <input v-if="mode == 'update'" class= "sectionProfile__card__content__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
                 <input type="text" v-if="mode == 'update'" v-model="dataUser.name" placeholder="Nom"> 
                 <li class="sectionProfile__card__content__data" v-else>Nom : {{ dataUser.name }}</li>
@@ -39,8 +40,9 @@ export default {
             userId: "",
             dataUser: [],
             mode: 'read',
-            file: "",
             errorAlert: "",
+            file: null,
+            urlImage: "",
         };
     },
     methods: {
@@ -54,6 +56,7 @@ export default {
                 .then((res) => {
                     console.log(res);
                     this.dataUser = res.data;
+                    localStorage.setItem("image", res.data.image);
                     document.getElementById("fileInput").value='';
                     this.file = null;
                 })
@@ -85,6 +88,7 @@ export default {
                     console.log(res);
                     this.getData();
                     this.switchToRead();
+                    this.urlImage = "";
                 })
                 .catch((error) => {
                     console.log({ error });
@@ -93,6 +97,7 @@ export default {
         },
         addImg() {
             this.file = this.$refs.file.files[0];
+            this.urlImage = document.getElementById("fileInput").value;
         },
         switchToUpdate() {
             this.mode = 'update';
@@ -162,6 +167,12 @@ export default {
                 }
                 &__addFile{
                     display: none;
+                }
+                em{
+                    color: $tertiaryColor;
+                    font-size: 11px;
+                    font-weight: 700;
+                    margin-bottom: 15px;
                 }
             }
             &__button{
