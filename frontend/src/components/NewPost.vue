@@ -4,6 +4,7 @@
             <input class="newPostCard__form__title styleInput" type="text" placeholder="Titre (facultatif)" v-model="title">
             <textarea class="newPostCard__form__text styleInput" type="textarea" placeholder="Votre texte" v-model="content"></textarea>
             <label for="fileInput" class="newPostCard__form__actionButton primaryButton">Ajouter une image</label>
+            <em v-if="urlImage">Votre nouvelle image: {{ this.urlImage }}</em>
             <input class= "newPostCard__form__addFile" id="fileInput" type="file" @change="addImg()" ref="file" />
             <button class="newPostCard__form__actionButton primaryButton" @click.prevent="AddPost()">Publier</button>
             <button class="newPostCard__form__actionButton secondaryButton" @click.prevent="SwitchToNormalView()">Annuler</button>
@@ -34,6 +35,7 @@ export default {
             errorAlert: "",
             dataUser: [],
             imageUser: localStorage.getItem("image"),
+            urlImage: "",
         }
     },
 
@@ -44,6 +46,9 @@ export default {
         SwitchToNormalView() {
             this.mode = 'normalView';
             this.content = '';
+            document.getElementById("fileInput").value='';
+            this.file = null;
+            this.urlImage = "";
         },
         LoadPosts() {
             this.$emit("loadPosts");
@@ -52,6 +57,7 @@ export default {
         },
         addImg() {
             this.file = this.$refs.file.files[0];
+            this.urlImage = document.getElementById("fileInput").value;
         },
         AddPost() {          
           let token = localStorage.getItem("token");
@@ -130,6 +136,20 @@ export default {
                 margin-left: 10px;
             }
         }
+        label{
+            width: 50%;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        em{
+            color: $tertiaryColor;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        } 
     }
     &__toAddPost{
         display: flex;

@@ -8,18 +8,21 @@
             <img class="comment__view__card__img" src="../assets/profilepics.jpg" alt="" />
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
-        <label class="sendComment__button" for="fileInput" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
+        <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
-    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Voir les commentaire(s)</button>
-    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Masquer les commentaire(s)</button>
+    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Commentaire(s)</button>
+    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Commentaire(s)</button>
     <div v-if="mode == 'comment'">
         <div class="commentContainer" v-for="comment in allComments" :key="comment.id">
             <div class="comment">
                 <div class="comment__profile">
                     <div class="comment__profile__infos">
-                        <div class="comment__profile__infos__image">
+                        <div v-if="comment.User.image" class="comment__profile__infos__image">
                             <img :src="comment.User.image" alt="" />
+                        </div>
+                        <div v-else class="comment__profile__infos__image">
+                            <img src="../assets/profilepics.jpg" alt="" />
                         </div>
                         <div class="comment__profile__infos__text">
                             <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
@@ -27,28 +30,29 @@
                         </div>
                     </div>
                     <div class="comment__profile__tools">
-                        <span v-if="userId == comment.idUser"><i type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" class="fas fa-pen"></i></span>
-                        <span v-if="isAdmin === true || userId == comment.idUser"><i type="submit" @click.prevent="deleteComment(comment.id)" class="fas fa-trash-alt"></i></span>
+                        <span v-if="userId == comment.idUser" type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content"><i class="fas fa-pen"></i></span>
+                        <span v-if="isAdmin === true || userId == comment.idUser" type="submit" @click.prevent="confirmDelete(comment.id)"><i class="fas fa-trash-alt"></i></span>
                     </div>
                 </div>
                 <div v-if="UpdateId == comment.id" class="comment__modify">
                     <input class="comment__modify__input styleInput" v-model="content" />
                     <div v-if="file == null" class="comment__modify__image">
                         <img :src="comment.image" alt="">
-                        <label for="fileInput" class="primaryButton">Ajouter une image</label>
                     </div>
-                    <div v-else class="comment__modify__image">
-                        <img :src="file" alt="">
-                        <label for="fileInput" class="primaryButton">Ajouter une image</label>
+                    <div class="comment__modify__button1">
+                        <label for="fileInputComment" class="primaryButton">Ajouter une image</label>
+                        <em v-if="this.$parent.urlImageComment">Votre nouvelle image: {{ this.$parent.urlImageComment }}</em>
+                    </div>
+                    <div class="comment__modify__button2">
+                        <button class="primaryButton" @click.prevent="updateComment()">Modifier</button>
+                        <button class="secondaryButton"  @click="UpdateId=-1, loadComments()">Annuler</button>
                     </div>
                 </div>
-                <div v-if="UpdateId == comment.id" class="comment__modify__buttonContainer">
-                    <button v-if="UpdateId == comment.id" class="primaryButton" @click.prevent="updateComment()">Modifier</button>
-                    <button v-if="UpdateId == comment.id" class="secondaryButton"  @click="UpdateId=-1">Annuler</button>
-                </div>
-                <p v-else class="comment__content">{{ comment.content }}</p>
-                <div v-if="comment.image != 'no image'" class="comment__content__image">
-                    <img :src="comment.image" alt="">
+                <div v-else>
+                    <p class="comment__content">{{ comment.content }}</p>
+                    <div v-if="comment.image != 'no image'" class="comment__content__image">
+                        <img :src="comment.image" alt="">
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,6 +76,7 @@ export default {
             isAdmin: "",
             errorAlert: "",
             dataUser: [],
+
         }
     },
     props: {
@@ -83,9 +88,9 @@ export default {
         addComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
-            if (this.$parent.file !== null && document.getElementById("fileInput").value !='') {
+            if (this.$parent.file !== null && document.getElementById("fileInputComment").value !='') {
                 data.append('content', this.content);
-                data.append('image', this.$parent.file, this.$parent.file);
+                data.append('image', this.$parent.file, this.$parent.file.name);
                 console.log(this.file)
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
@@ -119,6 +124,10 @@ export default {
                 .then((res) => {
                     this.allComments = res.data;
                     console.log(this.allComments);
+                    document.getElementById("fileInputComment").value='';
+                    this.file = null;
+                    this.$parent.urlImageComment = "";
+                    this.content = "";
                 })
                 .catch((error) => {
                     console.log(error);
@@ -140,12 +149,17 @@ export default {
                     alert(this.errorAlert = error.response.data.error);
                 });
         },
+        confirmDelete(id) {
+            if (confirm("Voulez-vous vraiment supprimer ce commentaire ?")) {
+                this.deleteComment(id);
+            }
+        },
         updateComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
-            if (this.file !== null && document.getElementById("fileInput").value !='') {
+            if (this.file !== null && document.getElementById("fileInputComment").value !='') {
                 data.append('content', this.content);
-                data.append('image', this.$parent.file, this.$parent.file);
+                data.append('image', this.$parent.file, this.$parent.file.name);
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
             }
@@ -170,7 +184,6 @@ export default {
                     alert(this.errorAlert = error.response.data.error);
                 })
         },
-
         SwitchToComment() {
             this.mode = 'comment';
         },
@@ -262,13 +275,16 @@ div{
 }
 .commentContainer{
     padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .comment{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 100%;
+    width: 90%;
     border: $bodyColor 2px solid;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -341,34 +357,45 @@ div{
             height: 40px;
         }
         &__image{
-            width: 100%;
+            width: 90%;
             height: auto;
+            margin: auto;
             margin-bottom: 15px;
             img{
                 width: 100%;
                 height: auto;
                 object-fit: cover;
             }
+        }
+        &__button1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
             label{
                 width: 40%;
                 height: 40px;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                margin-top: 15px;
-                margin: auto;
+                margin-bottom: 10px;
             }
-
+            em{
+                color: $tertiaryColor;
+                font-size: 11px;
+                font-weight: 700;
+                margin-bottom: 15px;
+            } 
         }
-        &__buttonContainer{
+        &__button2{
             width: 100%;
             display: flex;
             justify-content: space-around;
-           button{
+            button{
                 width: 40%;
                 height: 40px;
                 margin-bottom: 25px; 
-           }
+            }
         }
     }
     &__content {
@@ -377,8 +404,9 @@ div{
         text-align: justify;
         word-wrap: break-word;
         &__image{
-            width: 100%;
+            width: 90%;
             height: auto;
+            margin: auto;
             margin-bottom: 15px;
             img{
                 width: 100%;

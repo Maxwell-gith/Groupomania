@@ -21,7 +21,10 @@
             </ul>
             <button class="sectionProfile__card__button primaryButton" v-if="mode == 'update'" @click="sendUpdate()">Sauvegarder</button>
             <button class="sectionProfile__card__button secondaryButton" v-if="mode == 'update'" @click="switchToRead(), getData()">Annuler</button>
-            <button class="sectionProfile__card__button primaryButton" v-else @click="switchToUpdate()">Modifier</button>
+            <div class="sectionProfile__card__buttonContainer" v-else>
+                <button class="sectionProfile__card__buttonContainer__button primaryButton" @click="switchToUpdate()">Modifier</button>
+                <button class="sectionProfile__card__buttonContainer__buttonDelete primaryButton" @click="confirmDelete()">Supprimer mon Compte</button>
+            </div>
         </div>
     </section>
 </template>
@@ -95,6 +98,27 @@ export default {
                     alert(this.errorAlert = error.response.data.error);
                 });
         },
+        deleteAccount(){
+            let token = localStorage.getItem("token");
+            let userId = localStorage.getItem("id");
+            axios
+                .delete("http://localhost:3000/api/profile/" + userId, {
+                    headers: { Authorization: "Bearer " + token },
+                })
+                .then((res) => {
+                    console.log(res);
+                    localStorage.clear();
+                    this.$router.push("/");
+                })
+                .catch((error) => {
+                    console.log({ error });
+                });
+        },
+        confirmDelete() {
+            if (confirm("Voulez-vous vraiment supprimer votre compte ?")) {
+                this.deleteAccount();
+            }
+        },    
         addImg() {
             this.file = this.$refs.file.files[0];
             this.urlImage = document.getElementById("fileInput").value;
@@ -179,6 +203,24 @@ export default {
                 width: 50%;
                 height: 40px;
                 margin-bottom: 25px;
+            }
+            &__buttonContainer{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                &__button{
+                    width: 50%;
+                    height: 40px;
+                    margin-bottom: 25px;
+                }
+                &__buttonDelete{
+                    background-color: $primaryColor;
+                    color: $bodyColor;
+                    width: 50%;
+                    height: 40px;
+                    margin-bottom: 25px;
+                }
             }
         }
     }

@@ -1,6 +1,7 @@
 <template>
     <div class="postCardContainer">
         <input v-show="false" id="fileInput" type="file" @change="addImg()" ref="file" />
+        <input v-show="false" id="fileInputComment" type="file" @change="addImgComment()" ref="file" />
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <div class="postCard__profile">
                 <div class="postCard__profile__infos">
@@ -16,8 +17,8 @@
                     </div>
                 </div>
                 <div class="postCard__profile__tools">
-                    <span v-if="userId == post.idUser"><i type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" class="fas fa-pen"></i></span>
-                    <span v-if="isAdmin === true || userId == post.idUser"><i type="submit" @click.prevent="confirmDelete(post.id)" class="fas fa-trash-alt"></i></span>
+                    <span v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content"><i class="fas fa-pen"></i></span>
+                    <span v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="confirmDelete(post.id)"><i class="fas fa-trash-alt"></i></span>
                 </div>
             </div>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
@@ -69,7 +70,7 @@ export default {
             UpdateId:-1,
             file: "",
             urlImage: "",
-            fileInput: document.getElementById("fileInput"),
+            urlImageComment: "",
         };
     },
     methods: {
@@ -147,6 +148,10 @@ export default {
         addImg() {
             this.file = this.$refs.file.files[0];
             this.urlImage = document.getElementById("fileInput").value;
+        },
+        addImgComment() {
+            this.file = this.$refs.file.files[0];
+            this.urlImageComment = document.getElementById("fileInputComment").value;
         },
         adminOrNot() {
             let token = localStorage.getItem("token");
@@ -300,6 +305,7 @@ div{
             height: 80px;
             text-align: justify;
             word-wrap: break-word;
+            margin-bottom: 25px;
         }
         &__buttonContainer {
             width: 100%;
