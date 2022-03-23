@@ -11,8 +11,8 @@
         <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
         <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
-    <button v-if="mode == 'normalView'" class="toCommentButton primaryButton" @click.prevent="SwitchToComment(), loadComments()">Commentaire(s)</button>
-    <button v-else class="toCommentButton primaryButton" @click.prevent="SwitchToNormalView()">Commentaire(s)</button>
+    <button v-if="mode == 'normalView' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToComment(), loadComments()">Voir le(s) Commentaire(s)</button>
+    <button v-if="mode == 'comment' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToNormalView()">Masquer le(s) Commentaire(s)</button>
     <div v-if="mode == 'comment'">
         <div class="commentContainer" v-for="comment in allComments" :key="comment.id">
             <div class="comment">
@@ -210,6 +210,7 @@ export default {
     },
     mounted() {
         this.adminOrNot();
+        this.loadComments();
     },
 }
 </script>
@@ -217,9 +218,16 @@ export default {
 <style lang="scss" scoped>
 @import "@/assets/_shared.scss";
     .toCommentButton {
-        height: 40px;
-        width: 50%;
-        margin-bottom: 25px;
+        height: 60px;
+        width: 100%;
+        padding: 5px;
+        background-color: transparent;
+        text-decoration: none;
+        border: none;
+        border-top: $secondaryColor 2px solid;
+        font-weight: 700;
+        font-size: 1em;
+        cursor: pointer;
     }
     .sendComment {
         display: flex;
@@ -229,8 +237,8 @@ export default {
         width: 100%;
         padding: 15px;
         &__image {
-            width: 40px;
-            height: 40px;
+            max-width: 40px;
+            max-height: 40px;
             border-radius: 50%;
             border: $primaryColor 3px solid;
             overflow: hidden;
@@ -246,8 +254,10 @@ export default {
             height: 40px;
         }
         &__button {
-            width: 40px;
-            height: 40px;
+            min-width: 40px;
+            min-height: 40px;
+            max-width: 40px;
+            max-height: 40px;
             border-radius: 50%;
             border: none;
             padding: 5px;
@@ -418,6 +428,7 @@ div{
     }
 
 }
+
 
 </style>
     

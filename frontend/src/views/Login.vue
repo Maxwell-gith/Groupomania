@@ -39,7 +39,7 @@ export default {
  
     },
     methods: {
-        async buttonCreateAccount() {
+        buttonCreateAccount() {
             if (this.password === this.confirmPassword) {
                 const data = {
                     name: this.name,
@@ -47,7 +47,7 @@ export default {
                     email: this.email,
                     password: this.password,
                 }
-                await axios
+                axios
                     .post("http://localhost:3000/api/user/signup", data)
                     .then((res) => {
                         console.log(res);
@@ -61,8 +61,8 @@ export default {
                 alert("Les mots de passe ne correspondent pas");
             }
         },
-        async buttonLogin() {
-            await axios
+        buttonLogin() {
+            axios
                 .post("http://localhost:3000/api/user/login", {
                     email: this.email,
                     password: this.password,

@@ -37,9 +37,10 @@ exports.signup = (req, res, next) => {
             res.status(201).json({
                 userId: user.id,
                 isAdmin: user.isAdmin,
+                message: "Utilisateur créé !"
             });
         })
-        .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
+        // .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
         .catch((error) => res.status(400).json({ error: 'error : Compte existe déja'  }));
     })
     .catch(error => res.status(500).json({ error }));
