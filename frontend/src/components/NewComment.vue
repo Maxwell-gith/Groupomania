@@ -9,7 +9,7 @@
         </div>
         <input class="sendComment__input  styleInput" type="text" v-model="content" placeholder="Votre commentaire" />
         <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
-        <div class="sendComment__button" @click.prevent="addComment()"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
+        <div class="sendComment__button" @click.prevent="addComment()" title="Envoyer commentaire"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
     <button v-if="mode == 'normalView' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToComment(), loadComments()">Voir le(s) Commentaire(s)</button>
     <button v-if="mode == 'comment' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToNormalView()">Masquer le(s) Commentaire(s)</button>
@@ -30,8 +30,8 @@
                         </div>
                     </div>
                     <div class="comment__profile__tools">
-                        <span v-if="userId == comment.idUser" type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content"><i class="fas fa-pen"></i></span>
-                        <span v-if="isAdmin === true || userId == comment.idUser" type="submit" @click.prevent="confirmDelete(comment.id)"><i class="fas fa-trash-alt"></i></span>
+                        <span v-if="userId == comment.idUser" type="submit" @click.prevent="switchToUpdate(comment.id);content=comment.content" title="Modifier commentaire"><i class="fas fa-pen"></i></span>
+                        <span v-if="isAdmin === true || userId == comment.idUser" type="submit" @click.prevent="confirmDelete(comment.id)" title="Supprimer commentaire"><i class="fas fa-trash-alt"></i></span>
                     </div>
                 </div>
                 <div v-if="UpdateId == comment.id" class="comment__modify">

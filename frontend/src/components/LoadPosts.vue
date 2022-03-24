@@ -17,8 +17,8 @@
                     </div>
                 </div>
                 <div class="postCard__profile__tools">
-                    <span v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content"><i class="fas fa-pen"></i></span>
-                    <span v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="confirmDelete(post.id)"><i class="fas fa-trash-alt"></i></span>
+                    <span v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" title="Modifier post"><i class="fas fa-pen"></i></span>
+                    <span v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="confirmDelete(post.id)" title="Supprimer post"><i class="fas fa-trash-alt"></i></span>
                 </div>
             </div>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
