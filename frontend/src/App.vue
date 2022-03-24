@@ -39,6 +39,7 @@ export default {
     logout() {
       localStorage.removeItem("token");
       localStorage.removeItem("id");
+      localStorage.removeItem("image");
       this.log = false;
     },
   },

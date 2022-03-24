@@ -30,6 +30,7 @@ exports.signup = (req, res, next) => {
             email: req.body.email,
             name: req.body.name,
             firstname: req.body.firstname,
+            image:'',
             password: hash,
             isAdmin: false,
         })
@@ -40,7 +41,6 @@ exports.signup = (req, res, next) => {
                 message: "Utilisateur créé !"
             });
         })
-        // .then(() => res.status(201).json({ message: "Utilisateur créé !" }))
         .catch((error) => res.status(400).json({ error: 'error : Compte existe déja'  }));
     })
     .catch(error => res.status(500).json({ error }));

@@ -1,7 +1,7 @@
 <template>
     <div class="postCardContainer">
         <input v-show="false" id="fileInput" type="file" @change="addImg()" ref="file" />
-        <input v-show="false" id="fileInputComment" type="file" @change="addImgComment()" ref="file" />
+        <input v-show="false" id="fileInputComment" type="file" @change="addImgComment()" ref="fileComment" />
         <div class="postCard" v-for="post in allPosts" :key="post.id">
             <div class="postCard__profile">
                 <div class="postCard__profile__infos">
@@ -18,7 +18,7 @@
                 </div>
                 <div class="postCard__profile__tools">
                     <span v-if="userId == post.idUser" type="submit" @click.prevent="switchToUpdate(post.id);title=post.title;content=post.content" title="Modifier post"><i class="fas fa-pen"></i></span>
-                    <span v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="confirmDelete(post.id)" title="Supprimer post"><i class="fas fa-trash-alt"></i></span>
+                    <span v-if="isAdmin === true || userId == post.idUser" type="submit" @click.prevent="confirmDelete(post.id)" title="Spprimer post"><i class="fas fa-trash-alt"></i></span>
                 </div>
             </div>
             <div v-if="UpdateId == post.id" class="postCard__content">                                
@@ -150,7 +150,7 @@ export default {
             this.urlImage = document.getElementById("fileInput").value;
         },
         addImgComment() {
-            this.file = this.$refs.file.files[0];
+            this.file = this.$refs.fileComment.files[0];
             this.urlImageComment = document.getElementById("fileInputComment").value;
         },
         adminOrNot() {

@@ -11,6 +11,7 @@
         <label class="sendComment__button" for="fileInputComment" title="Ajouter une image"><i class="fas fa-file-image"></i></label>
         <div class="sendComment__button" @click.prevent="addComment()" title="Envoyer commentaire"><i class="sendComment__button__icon fas fa-paper-plane"></i></div>
     </form>
+    <em v-if="this.$parent.urlImageComment">Votre nouvelle image: {{ this.$parent.urlImageComment }}</em>
     <button v-if="mode == 'normalView' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToComment(), loadComments()">Voir le(s) Commentaire(s)</button>
     <button v-if="mode == 'comment' && allComments.length > 0" class="toCommentButton" @click.prevent="SwitchToNormalView()">Masquer le(s) Commentaire(s)</button>
     <div v-if="mode == 'comment'">
@@ -76,7 +77,6 @@ export default {
             isAdmin: "",
             errorAlert: "",
             dataUser: [],
-
         }
     },
     props: {
@@ -91,7 +91,6 @@ export default {
             if (this.$parent.file !== null && document.getElementById("fileInputComment").value !='') {
                 data.append('content', this.content);
                 data.append('image', this.$parent.file, this.$parent.file.name);
-                console.log(this.file)
                 data.append('idPost', this.idPost);
                 data.append('iduser', this.userId);
             }
@@ -157,7 +156,7 @@ export default {
         updateComment() {
             let token = localStorage.getItem("token");
             let data = new FormData();
-            if (this.file !== null && document.getElementById("fileInputComment").value !='') {
+            if (this.$parent.file !== null && document.getElementById("fileInputComment").value !='') {
                 data.append('content', this.content);
                 data.append('image', this.$parent.file, this.$parent.file.name);
                 data.append('idPost', this.idPost);
