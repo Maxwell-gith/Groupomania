@@ -27,7 +27,7 @@
                         </div>
                         <div class="comment__profile__infos__text">
                             <strong>{{ comment.User.firstname }} {{ comment.User.name }}</strong>
-                            <em>{{ comment.createdAt }}</em>
+                            <em>{{ moment(comment.createdAt).format("DD-MM-YYYY HH:MM") }}</em>
                         </div>
                     </div>
                     <div class="comment__profile__tools">
@@ -63,11 +63,13 @@
 
 <script>
 import axios from "axios";
+var moment = require('moment');
 
 export default {
     name: 'NewComment',
     data() {
         return {
+            moment: moment,
             mode: 'normalView',
             content: '',
             allComments: [],
@@ -236,8 +238,8 @@ export default {
         width: 100%;
         padding: 15px;
         &__image {
-            max-width: 40px;
-            max-height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             border: $primaryColor 3px solid;
             overflow: hidden;

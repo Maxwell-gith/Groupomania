@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 22 mars 2022 à 20:36
+-- Généré le : mar. 29 mars 2022 à 12:14
 -- Version du serveur : 10.4.22-MariaDB
 -- Version de PHP : 8.0.13
 
@@ -97,6 +97,10 @@ CREATE TABLE `users` (
 --
 -- Déclencheurs `users`
 --
+DELIMITER $$
+CREATE TRIGGER `deleteComment2` BEFORE DELETE ON `users` FOR EACH ROW DELETE from comments where iduser = OLD.id
+$$
+DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `deletepost` BEFORE DELETE ON `users` FOR EACH ROW DELETE from posts where iduser = OLD.id
 $$

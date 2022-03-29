@@ -13,7 +13,7 @@
                     </div>
                     <div class="postCard__profile__infos__text">
                         <strong>{{ post.User.firstname }} {{ post.User.name }}</strong> 
-                        <em>{{post.createdAt}}</em>
+                        <em>{{ moment(post.createdAt).format("DD-MM-YYYY HH:MM") }}</em>
                     </div>
                 </div>
                 <div class="postCard__profile__tools">
@@ -53,11 +53,14 @@
 import axios from "axios";
 import NewComment from './NewComment.vue';
 
+var moment = require('moment');
+
 export default {
     components: { NewComment },
     name: 'loadPosts',
     data() {
         return {
+            moment: moment,
             token: "",
             userId: localStorage.getItem("id"),
             isAdmin: "",
